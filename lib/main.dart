@@ -1,4 +1,4 @@
-import 'package:epox_flutter/Screens/AuthScreen/AuthScreen.dart';
+import 'package:epox_flutter/Screens/Authorization/OnBoarding.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -6,7 +6,7 @@ void main() {
     title: 'Team: EPOX',
     initialRoute: '/',
     routes: {
-      '/': (context) => AuthScreen(),
+      '/': (context) => OnBoarding(),
     },
     debugShowCheckedModeBanner: false,
   ));
