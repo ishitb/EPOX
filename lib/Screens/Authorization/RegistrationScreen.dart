@@ -163,6 +163,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                   borderRadius: BorderRadius.circular(15),
                   onTap: () {
                     String url = widget.registerURL;
+                    Navigator.popAndPushNamed(context, '/main-page');
                   },
                   child: Ink(
                     height: 55,
