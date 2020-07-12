@@ -28,7 +28,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   TextEditingController _emailController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
   TextEditingController _password2Controller = TextEditingController();
-  bool _passwordEmpty = false, _passwordVisible = false;
+  bool _passwordEmpty = true, _passwordVisible = false;
 
   @override
   void dispose() {

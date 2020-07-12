@@ -2,7 +2,6 @@ import 'package:epox_flutter/Screens/Authorization/RegistrationScreen.dart';
 import 'package:epox_flutter/Shared/Colors.dart';
 import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/material.dart';
-import 'package:flare_dart/actor.dart';
 
 class OnBoarding extends StatefulWidget {
   @override
@@ -42,9 +41,10 @@ class _OnBoardingState extends State<OnBoarding> {
                   RichText(
                     textAlign: TextAlign.center,
                     text: TextSpan(
-                      text: "Hello!\n",
+                      text: "Hello",
                       style: TextStyle(color: OffWhite, fontSize: 30),
                       children: [
+                        TextSpan(text: '!\n', style: TextStyle(color: Orange)),
                         TextSpan(
                             text:
                                 "Let's get started with solving Road Management issues with ",
