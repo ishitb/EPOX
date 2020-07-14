@@ -1,8 +1,9 @@
-import 'package:epox_flutter/Shared/Colors.dart';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
 import 'package:path_provider/path_provider.dart';
-import 'dart:io';
+import 'package:epox_flutter/Shared/Colors.dart';
 
 class MainPage extends StatefulWidget {
   final List<CameraDescription> cameras;
@@ -20,7 +21,8 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
   @override
   void initState() {
     super.initState();
-    controller = CameraController(widget.cameras[0], ResolutionPreset.medium);
+    controller =
+        CameraController(widget.cameras[0], ResolutionPreset.ultraHigh);
     controller.initialize().then((_) {
       if (!mounted) {
         return;
@@ -70,6 +72,7 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
               child: AspectRatio(
                   aspectRatio: controller.value.aspectRatio,
                   child: CameraPreview(controller))),
+          // Image.asset(imagePath ?? ""),
           SafeArea(
             child: Container(
               height: _height,
@@ -124,6 +127,9 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
       print(e);
       return null;
     }
+    setState(() {
+      imagePath = filePath;
+    });
     return filePath;
   }
 

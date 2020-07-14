@@ -1,7 +1,9 @@
-import 'package:epox_flutter/Screens/Authorization/RegistrationScreen.dart';
+import 'package:flutter/material.dart';
 import 'package:epox_flutter/Shared/Colors.dart';
 import 'package:flare_flutter/flare_actor.dart';
-import 'package:flutter/material.dart';
+
+import 'package:epox_flutter/Screens/Authorization/RegistrationScreen.dart';
+import 'package:epox_flutter/Services/Localization/AppLocalizations.dart';
 
 class OnBoarding extends StatefulWidget {
   @override
@@ -9,9 +11,11 @@ class OnBoarding extends StatefulWidget {
 }
 
 class _OnBoardingState extends State<OnBoarding> {
+  AppLocalizations _locale;
   bool _checkSignUp = false, _checkLogin = false;
   @override
   Widget build(BuildContext context) {
+    _locale = AppLocalizations.of(context);
     bool _keyboardUp = MediaQuery.of(context).viewInsets.bottom != 0;
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
@@ -28,6 +32,36 @@ class _OnBoardingState extends State<OnBoarding> {
         body: SafeArea(
           child: Stack(
             children: [
+              Padding(
+                padding: const EdgeInsets.only(top: 15.0, right: 15.0),
+                child: Align(
+                  alignment: Alignment.topRight,
+                  child: InkWell(
+                    splashColor: Blue,
+                    borderRadius: BorderRadius.circular(100),
+                    onTap: () {
+                      setState(() {
+                        _locale = _locale.changeLanguage();
+                      });
+                    },
+                    child: Ink(
+                      padding: EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          border: Border.all(
+                            color: OffWhite,
+                            width: 2,
+                          )),
+                      // ignore: missing_required_param
+                      child: Icon(
+                        Icons.translate,
+                        color: OffWhite,
+                        size: 35,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -38,21 +72,26 @@ class _OnBoardingState extends State<OnBoarding> {
                     child: Image.network(
                         'https://www.sih.gov.in/img1/SMART-INDIA-HACKATHON-2020.png'),
                   ),
-                  RichText(
-                    textAlign: TextAlign.center,
-                    text: TextSpan(
-                      text: "Hello",
-                      style: TextStyle(color: OffWhite, fontSize: 30),
-                      children: [
-                        TextSpan(text: '!\n', style: TextStyle(color: Orange)),
-                        TextSpan(
-                            text:
-                                "Let's get started with solving Road Management issues with ",
-                            style: TextStyle(fontSize: 24)),
-                        TextSpan(
-                            text: "EPOX",
-                            style: TextStyle(color: Orange, fontSize: 24))
-                      ],
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                    child: RichText(
+                      textAlign: TextAlign.center,
+                      text: TextSpan(
+                        // text: "Hello",
+                        text: _locale.translate('heading1'),
+                        style: TextStyle(color: OffWhite, fontSize: 30),
+                        children: [
+                          TextSpan(
+                              text: '!\n', style: TextStyle(color: Orange)),
+                          TextSpan(
+                              text: _locale.translate('heading2'),
+                              // "Let's get started with solving Road Management issues with ",
+                              style: TextStyle(fontSize: 24)),
+                          TextSpan(
+                              text: "  EPOX",
+                              style: TextStyle(color: Orange, fontSize: 24))
+                        ],
+                      ),
                     ),
                   ),
                   AnimatedContainer(
@@ -85,7 +124,8 @@ class _OnBoardingState extends State<OnBoarding> {
                             border: Border.all(color: Orange),
                             borderRadius: BorderRadius.circular(20)),
                         child: Text(
-                          "Login to Account",
+                          _locale.translate('loginHead'),
+                          // "Login to Account",
                           textAlign: TextAlign.center,
                           style: TextStyle(color: OffWhite, fontSize: 20),
                         ),
@@ -109,7 +149,8 @@ class _OnBoardingState extends State<OnBoarding> {
                             border: Border.all(color: Orange),
                             borderRadius: BorderRadius.circular(20)),
                         child: Text(
-                          "Create New Account",
+                          _locale.translate('signUpHead'),
+                          // "Create New Account",
                           textAlign: TextAlign.center,
                           style: TextStyle(color: OffWhite, fontSize: 20),
                         ),
@@ -135,10 +176,13 @@ class _OnBoardingState extends State<OnBoarding> {
                       _checkLogin = false;
                     });
                   },
-                  buttonText: "Login",
+                  buttonText: _locale.translate('loginButton'),
+                  // "Login",
                   registerURL: "",
-                  title: "Login to Continue",
+                  title: _locale.translate('loginHead'),
+                  // "Login to Continue",
                   newAccount: false,
+                  locale: _locale,
                 ),
               ),
               AnimatedContainer(
@@ -158,10 +202,13 @@ class _OnBoardingState extends State<OnBoarding> {
                       _checkSignUp = false;
                     });
                   },
-                  buttonText: "Sign Up",
+                  buttonText: _locale.translate('signUpButton'),
+                  // "Sign Up",
                   registerURL: "",
-                  title: "Create New Account",
+                  title: _locale.translate('signUpHead'),
+                  // "Create New Account",
                   newAccount: true,
+                  locale: _locale,
                 ),
               )
             ],

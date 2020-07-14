@@ -1,5 +1,6 @@
-import 'package:epox_flutter/Shared/Colors.dart';
 import 'package:flutter/material.dart';
+import 'package:epox_flutter/Services/Localization/AppLocalizations.dart';
+import 'package:epox_flutter/Shared/Colors.dart';
 
 class RegistrationScreen extends StatefulWidget {
   final double height;
@@ -9,6 +10,7 @@ class RegistrationScreen extends StatefulWidget {
   final String registerURL;
   final Function backFunction;
   final bool newAccount;
+  final AppLocalizations locale;
   RegistrationScreen(
       {Key key,
       @required this.height,
@@ -17,7 +19,8 @@ class RegistrationScreen extends StatefulWidget {
       @required this.buttonText,
       @required this.backFunction,
       @required this.registerURL,
-      this.newAccount})
+      this.newAccount,
+      @required this.locale})
       : super(key: key);
 
   @override
@@ -72,7 +75,8 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                   ),
                   decoration: InputDecoration(
                       icon: Icon(Icons.mail_outline, color: Blue),
-                      labelText: "Email Address",
+                      labelText: widget.locale.translate('emailPlaceholder'),
+                      // "Email Address",
                       border: InputBorder.none,
                       labelStyle: TextStyle(color: Blue)),
                 ),
@@ -96,7 +100,8 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                       Icons.vpn_key,
                       color: Blue,
                     ),
-                    labelText: "Password",
+                    labelText: widget.locale.translate('passwordPlaceholder'),
+                    // "Password",
                     labelStyle: TextStyle(color: Blue),
                     border: InputBorder.none,
                     suffixIcon: _passwordEmpty
@@ -145,7 +150,9 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                               Icons.vpn_key,
                               color: Blue,
                             ),
-                            labelText: "Confirm Password",
+                            labelText: widget.locale
+                                .translate('passwordConfirmPlaceholder'),
+                            // "Confirm Password",
                             border: InputBorder.none,
                             labelStyle: TextStyle(color: Blue)),
                       ),
@@ -163,7 +170,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                   borderRadius: BorderRadius.circular(15),
                   onTap: () {
                     String url = widget.registerURL;
-                    Navigator.popAndPushNamed(context, '/main-page');
+                    Navigator.popAndPushNamed(context, '/home-page');
                   },
                   child: Ink(
                     height: 55,
@@ -214,7 +221,8 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                           width: 10,
                         ),
                         Text(
-                          "Go Back",
+                          widget.locale.translate('backButton'),
+                          // "Go Back",
                           style: TextStyle(color: Orange, fontSize: 18),
                         ),
                       ],

@@ -1,0 +1,12 @@
+{
+    "heading1": "Hello",
+    "heading2": "Let's get started with solving Road Management issues with",
+    "loginHead": "Login to Continue",
+    "signUpHead": "Create New Account",
+    "emailPlaceholder": "Email Address",
+    "passwordPlaceholder": "Password",
+    "passwordConfirmPlaceholder": "Confirm Password",
+    "loginButton": "Login",
+    "signUpButton": "Sign Up",
+    "backButton": "Go Back"
+}
