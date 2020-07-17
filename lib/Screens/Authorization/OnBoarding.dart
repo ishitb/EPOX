@@ -32,36 +32,6 @@ class _OnBoardingState extends State<OnBoarding> {
         body: SafeArea(
           child: Stack(
             children: [
-              Padding(
-                padding: const EdgeInsets.only(top: 15.0, right: 15.0),
-                child: Align(
-                  alignment: Alignment.topRight,
-                  child: InkWell(
-                    splashColor: Blue,
-                    borderRadius: BorderRadius.circular(100),
-                    onTap: () {
-                      setState(() {
-                        _locale = _locale.changeLanguage();
-                      });
-                    },
-                    child: Ink(
-                      padding: EdgeInsets.all(10),
-                      decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          border: Border.all(
-                            color: OffWhite,
-                            width: 2,
-                          )),
-                      // ignore: missing_required_param
-                      child: Icon(
-                        Icons.translate,
-                        color: OffWhite,
-                        size: 35,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -159,6 +129,17 @@ class _OnBoardingState extends State<OnBoarding> {
                   )
                 ],
               ),
+              GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      _checkLogin = false;
+                      _checkSignUp = false;
+                    });
+                  },
+                  child: Container(
+                    color: Colors.transparent,
+                    height: height * 0.25,
+                  )),
               AnimatedContainer(
                 duration: Duration(milliseconds: 200),
                 transform: Matrix4.translationValues(
@@ -210,7 +191,37 @@ class _OnBoardingState extends State<OnBoarding> {
                   newAccount: true,
                   locale: _locale,
                 ),
-              )
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 15.0, right: 15.0),
+                child: Align(
+                  alignment: Alignment.topRight,
+                  child: InkWell(
+                    splashColor: Blue,
+                    borderRadius: BorderRadius.circular(100),
+                    onTap: () {
+                      setState(() {
+                        _locale = _locale.changeLanguage();
+                      });
+                    },
+                    child: Ink(
+                      padding: EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          border: Border.all(
+                            color: OffWhite,
+                            width: 2,
+                          )),
+                      // ignore: missing_required_param
+                      child: Icon(
+                        Icons.translate,
+                        color: OffWhite,
+                        size: 35,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
             ],
           ),
         ),

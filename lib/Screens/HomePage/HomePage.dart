@@ -1,6 +1,9 @@
+import 'package:flutter/material.dart';
+
 import 'package:epox_flutter/Screens/HomePage/Pages/MainPage/MainPage.dart';
 import 'package:epox_flutter/Screens/HomePage/Pages/ProfilePage/ProfilePage.dart';
-import 'package:flutter/material.dart';
+import 'package:epox_flutter/Shared/Colors.dart';
+import 'package:epox_flutter/Screens/HomePage/Pages/Temp/TempPage.dart';
 
 class HomePage extends StatefulWidget {
   final List cameras;
@@ -16,9 +19,27 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: PageView(
-        controller: _pageController,
-        children: [ProfilePage(), MainPage(cameras: widget.cameras)],
+      body: Stack(
+        children: [
+          Container(
+            child: PageView(
+              controller: _pageController,
+              children: [
+                ProfilePage(),
+                MainPage(cameras: widget.cameras),
+                // ProfilePage()
+                TempPage(),
+              ],
+            ),
+          ),
+          SafeArea(
+            child: Container(
+              height: 50,
+              color: OffWhite,
+              width: MediaQuery.of(context).size.height,
+            ),
+          ),
+        ],
       ),
     );
   }
