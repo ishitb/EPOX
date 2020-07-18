@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flushbar/flushbar.dart';
+
+import 'package:epox_flutter/Services/Authentication/AuthProvider.dart';
 import 'package:epox_flutter/Services/Localization/AppLocalizations.dart';
 import 'package:epox_flutter/Shared/Colors.dart';
+import 'package:flutter/services.dart';
 
 class RegistrationScreen extends StatefulWidget {
   final double height;
@@ -32,6 +36,10 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   TextEditingController _passwordController = TextEditingController();
   TextEditingController _password2Controller = TextEditingController();
   bool _passwordEmpty = true, _passwordVisible = false;
+
+  bool _loading = false;
+
+  final AuthProvider _auth = AuthProvider();
 
   @override
   void dispose() {
@@ -168,29 +176,59 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                 child: InkWell(
                   splashColor: OffWhite,
                   borderRadius: BorderRadius.circular(15),
-                  onTap: () {
-                    String url = widget.registerURL;
-                    Navigator.popAndPushNamed(context, '/home-page');
-                  },
+                  onTap: _loading
+                      ? null
+                      : () async {
+                          setState(() {
+                            _loading = true;
+                          });
+
+                          dynamic result = widget.newAccount
+                              ? await _signUp()
+                              : await _login();
+
+                          print({'out': result});
+
+                          if (result.runtimeType == PlatformException)
+                            Flushbar(
+                              icon: Icon(Icons.error_outline,
+                                  color: Colors.redAccent),
+                              leftBarIndicatorColor: Colors.redAccent,
+                              message: result.message.toString(),
+                              duration: Duration(seconds: 3),
+                              isDismissible: true,
+                            )..show(context);
+                          else
+                            Navigator.popAndPushNamed(context, '/home-page');
+
+                          setState(() {
+                            _loading = false;
+                          });
+                        },
                   child: Ink(
                     height: 55,
                     width: widget.width,
                     decoration: BoxDecoration(
                         color: Orange, borderRadius: BorderRadius.circular(15)),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          widget.buttonText,
-                          style: TextStyle(color: OffWhite, fontSize: 18),
-                        ),
-                        SizedBox(width: 10),
-                        Icon(
-                          Icons.arrow_forward,
-                          color: OffWhite,
-                        )
-                      ],
-                    ),
+                    child: _loading
+                        ? Center(
+                            child: CircularProgressIndicator(
+                            valueColor: AlwaysStoppedAnimation<Color>(Blue),
+                          ))
+                        : Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                widget.buttonText,
+                                style: TextStyle(color: OffWhite, fontSize: 18),
+                              ),
+                              SizedBox(width: 10),
+                              Icon(
+                                Icons.arrow_forward,
+                                color: OffWhite,
+                              )
+                            ],
+                          ),
                   ),
                 ),
               ),
@@ -235,5 +273,23 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
         ],
       ),
     );
+  }
+
+  Future _login() async {
+    dynamic result = await _auth.emailSignIn(
+      _emailController.text,
+      _passwordController.text,
+    );
+    print({'function': result.runtimeType});
+    return result;
+  }
+
+  Future _signUp() async {
+    dynamic result = await _auth.emailRegistration(
+      _emailController.text,
+      _passwordController.text,
+      _password2Controller.text,
+    );
+    return result;
   }
 }
