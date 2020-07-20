@@ -1,5 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:epox_flutter/Screens/Wrapper.dart';
 import 'package:epox_flutter/Services/Authentication/AuthProvider.dart';
 import 'package:epox_flutter/Services/Authentication/UserModel.dart';
+import 'package:epox_flutter/Services/Databases/UserDatabase.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:camera/camera.dart';
@@ -19,22 +22,23 @@ Future<void> main() async {
     print(e);
   }
 
+  final AuthProvider _auth = AuthProvider();
+
   runApp(
     MultiProvider(
       providers: [
         StreamProvider<UserModel>(
           create: (_) => AuthProvider().user,
+        ),
+        StreamProvider<QuerySnapshot>(
+          create: (_) => UserDatabase().userData,
         )
       ],
       child: MaterialApp(
         title: 'Team: EPOX',
-        initialRoute: '/',
-        routes: {
-          '/': (context) => OnBoarding(),
-          '/home-page': (context) => HomePage(
-                cameras: cameras,
-              )
-        },
+        home: Wrapper(
+          cameras: cameras,
+        ),
         debugShowCheckedModeBanner: false,
 
         // Language Changing

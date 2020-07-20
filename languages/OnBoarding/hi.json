@@ -5,7 +5,8 @@
     "signUpHead": "नया खाता बनाएँ",
     "emailPlaceholder": "ईमेल",
     "passwordPlaceholder": "पासवर्ड",
-    "passwordConfirmPlaceholder": "पासवर्ड दुबारा भरें",
+    "namePlaceholder": "नाम",
+    "usernamePlaceholder": "उपनाम",
     "loginButton": "प्रवेश करें",
     "signUpButton": "आगे बढ़ें",
     "backButton": "वापस"

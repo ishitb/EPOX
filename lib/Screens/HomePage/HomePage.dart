@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 import 'package:epox_flutter/Screens/HomePage/Pages/MainPage/MainPage.dart';
 import 'package:epox_flutter/Screens/HomePage/Pages/ProfilePage/ProfilePage.dart';
-import 'package:epox_flutter/Shared/Colors.dart';
 import 'package:epox_flutter/Screens/HomePage/Pages/Temp/TempPage.dart';
 
 class HomePage extends StatefulWidget {
@@ -32,13 +31,13 @@ class _HomePageState extends State<HomePage> {
               ],
             ),
           ),
-          SafeArea(
-            child: Container(
-              height: 50,
-              color: OffWhite,
-              width: MediaQuery.of(context).size.height,
-            ),
-          ),
+          // SafeArea(
+          //   child: Container(
+          //     height: 50,
+          //     color: OffWhite,
+          //     width: MediaQuery.of(context).size.height,
+          //   ),
+          // ),
         ],
       ),
     );

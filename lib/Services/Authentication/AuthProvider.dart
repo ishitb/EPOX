@@ -1,3 +1,4 @@
+import 'package:epox_flutter/Services/Databases/UserDatabase.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:epox_flutter/Services/Authentication/UserModel.dart';
 import 'package:flutter/services.dart';
@@ -32,20 +33,16 @@ class AuthProvider {
   }
 
   Future emailRegistration(
-      String email, String password, String confirmPassword) async {
+      String email, String password, String name, String username) async {
     try {
-      if (password != confirmPassword) {
-        return PlatformException(
-          message: "Please make sure that the passwords match",
-          code: 'PASSWORD_DIFFERENT',
-        );
-      }
-
       AuthResult result = await _auth.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
       FirebaseUser user = result.user;
+
+      await UserDatabase(uid: user.uid).registerUserData(email, username, name);
+
       return _userFromFirebase(user);
     } catch (e) {
       print(e);

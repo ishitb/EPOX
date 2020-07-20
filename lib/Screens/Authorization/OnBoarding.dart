@@ -25,6 +25,7 @@ class _OnBoardingState extends State<OnBoarding> {
           _checkLogin = false;
           _checkSignUp = false;
         });
+        return null;
       },
       child: Scaffold(
         resizeToAvoidBottomInset: false,

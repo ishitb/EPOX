@@ -1,8 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-
+import 'package:provider/provider.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:flutter_google_places/flutter_google_places.dart';
-import 'package:google_maps_webservice/places.dart';
+
+import 'package:epox_flutter/Services/Authentication/AuthProvider.dart';
+import 'package:epox_flutter/Services/Authentication/UserModel.dart';
 
 import 'package:epox_flutter/Shared/Colors.dart';
 
@@ -16,6 +18,8 @@ class ProfilePage extends StatefulWidget with WidgetsBindingObserver {
 class _ProfilePageState extends State<ProfilePage> {
   double longitude = 0, latitude = 0;
   bool loading = false, locationServicesEnabled = true;
+
+  final AuthProvider _auth = AuthProvider();
 
   Future<Position> _getCurrentLocation() async {
     setState(() {
@@ -52,7 +56,9 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
-    // print()
+    final user = Provider.of<UserModel>(context);
+    final snapshots = Provider.of<QuerySnapshot>(context);
+
     return SafeArea(
       child: Padding(
         padding: const EdgeInsets.only(top: 50.0),
@@ -77,6 +83,13 @@ class _ProfilePageState extends State<ProfilePage> {
                         _getCurrentLocation();
                       },
                     ),
+                    RaisedButton(
+                      child: Text("LogOut"),
+                      onPressed: () {
+                        _auth.signOut();
+                      },
+                    ),
+                    Text(user.email)
                     // TextField(
                     //   onTap: () async {
                     //     Prediction p = await PlacesAutocomplete.show(

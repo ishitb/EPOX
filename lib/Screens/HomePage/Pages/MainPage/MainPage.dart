@@ -19,6 +19,7 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
   List<CameraDescription> cameras;
   int selectedCameraIndex;
   String imagePath;
+  bool _capturing = false;
 
   File _image;
   final picker = ImagePicker();
@@ -72,85 +73,147 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
     double _height = MediaQuery.of(context).size.height;
     double _width = MediaQuery.of(context).size.width;
     return Scaffold(
-      body: imagePath == null
-          ? Stack(
-              children: [
-                Container(
-                    height: _height,
-                    child: AspectRatio(
-                      aspectRatio: controller.value.aspectRatio,
-                      child: CameraPreview(
-                        controller,
+      body: AnimatedSwitcher(
+        duration: Duration(milliseconds: 300),
+        child: imagePath == null
+            ? Stack(
+                children: [
+                  AnimatedContainer(
+                      duration: Duration(
+                        milliseconds: 300,
                       ),
-                    )),
-                // Image.asset(imagePath ?? ""),
-                SafeArea(
-                  child: Container(
-                    height: _height,
-                    width: _width,
-                    padding: EdgeInsets.only(bottom: 20),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Material(
-                          color: Colors.transparent,
-                          child: InkWell(
-                            onTap: () {
-                              _clickImage().then((imagePath) {
-                                print(imagePath);
-                              });
-                            },
-                            splashColor: OffWhite,
-                            borderRadius: BorderRadius.circular(100),
-                            child: Container(
-                              height: 75,
-                              width: 75,
-                              decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  border:
-                                      Border.all(color: OffWhite, width: 4)),
-                            ),
-                          ),
+                      height: _height,
+                      child: AspectRatio(
+                        aspectRatio: controller.value.aspectRatio,
+                        child: CameraPreview(
+                          controller,
                         ),
-                        Padding(
-                          padding: const EdgeInsets.only(right: 20.0),
-                          child: Align(
-                            alignment: Alignment.bottomRight,
-                            child: Material(
+                      )),
+                  SafeArea(
+                    child: Container(
+                      height: _height,
+                      width: _width,
+                      padding: EdgeInsets.only(bottom: 20),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Material(
+                            color: Colors.transparent,
+                            child: InkWell(
+                              onTap: () {
+                                setState(() {
+                                  _capturing = true;
+                                });
+                                _clickImage().then((imagePath) {
+                                  print(imagePath);
+                                });
+                              },
+                              splashColor: OffWhite,
                               borderRadius: BorderRadius.circular(100),
-                              color: Colors.transparent,
-                              child: InkWell(
-                                borderRadius: BorderRadius.circular(100),
-                                splashColor: Orange,
-                                child: Ink(
-                                  padding: EdgeInsets.all(10),
-                                  child: Icon(
-                                    Icons.image,
-                                    size: 40,
-                                    color: OffWhite,
-                                  ),
-                                ),
-                                onTap: getImageFromGallery,
+                              child: AnimatedContainer(
+                                duration: Duration(milliseconds: 350),
+                                curve: Curves.bounceOut,
+                                height: _capturing ? 100 : 75,
+                                width: _capturing ? 100 : 75,
+                                decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    border:
+                                        Border.all(color: OffWhite, width: 4)),
                               ),
                             ),
                           ),
-                        ),
-                      ],
+                          Padding(
+                            padding: const EdgeInsets.only(right: 20.0),
+                            child: Align(
+                              alignment: Alignment.bottomRight,
+                              child: Material(
+                                borderRadius: BorderRadius.circular(100),
+                                color: Colors.transparent,
+                                child: InkWell(
+                                  borderRadius: BorderRadius.circular(100),
+                                  splashColor: Orange,
+                                  child: Ink(
+                                    padding: EdgeInsets.all(10),
+                                    child: Icon(
+                                      Icons.image,
+                                      size: 40,
+                                      color: OffWhite,
+                                    ),
+                                  ),
+                                  onTap: getImageFromGallery,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                ),
-              ],
-            )
-          : Stack(
-              children: [
-                Container(
-                    height: _height,
-                    child: Image.asset(
-                      imagePath,
-                    )),
-              ],
-            ),
+                ],
+              )
+            : Stack(
+                children: [
+                  Container(
+                    color: Black,
+                    // height: _height,
+                    child: Image.file(
+                      // imagePath,
+                      _image,
+                      height: _height,
+                      width: _width,
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 20.0,
+                      horizontal: 40.0,
+                    ),
+                    child: Align(
+                      alignment: Alignment.bottomCenter,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Material(
+                            color: Colors.transparent,
+                            borderRadius: BorderRadius.circular(100),
+                            child: InkWell(
+                              borderRadius: BorderRadius.circular(100),
+                              child: Icon(
+                                Icons.cancel,
+                                color: OffWhite,
+                                size: 50,
+                              ),
+                              onTap: () {
+                                setState(() {
+                                  _image = null;
+                                  imagePath = null;
+                                  _capturing = false;
+                                  controller.initialize();
+                                });
+                              },
+                            ),
+                          ),
+                          Material(
+                            color: Colors.transparent,
+                            borderRadius: BorderRadius.circular(100),
+                            child: InkWell(
+                              borderRadius: BorderRadius.circular(100),
+                              child: Icon(
+                                Icons.arrow_forward_ios,
+                                color: OffWhite,
+                                size: 60,
+                              ),
+                              onTap: () {},
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  )
+                ],
+              ),
+      ),
     );
   }
 
@@ -173,6 +236,7 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
     }
     setState(() {
       imagePath = filePath;
+      _image = File(filePath);
     });
     return filePath;
   }
@@ -185,6 +249,7 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
     if (pickedFile != null) {
       setState(() {
         imagePath = pickedFile.path;
+        _image = File(pickedFile.path);
       });
       print(imagePath);
     } else

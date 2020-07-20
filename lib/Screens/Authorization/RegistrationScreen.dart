@@ -1,5 +1,6 @@
+import 'package:epox_flutter/Shared/BottomPopups.dart';
+import 'package:epox_flutter/Shared/Decorations.dart';
 import 'package:flutter/material.dart';
-import 'package:flushbar/flushbar.dart';
 
 import 'package:epox_flutter/Services/Authentication/AuthProvider.dart';
 import 'package:epox_flutter/Services/Localization/AppLocalizations.dart';
@@ -34,23 +35,28 @@ class RegistrationScreen extends StatefulWidget {
 class _RegistrationScreenState extends State<RegistrationScreen> {
   TextEditingController _emailController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
-  TextEditingController _password2Controller = TextEditingController();
+  TextEditingController _nameController = TextEditingController();
+  TextEditingController _usernameController = TextEditingController();
   bool _passwordEmpty = true, _passwordVisible = false;
-
   bool _loading = false;
+
+  final _formKey = GlobalKey<FormState>();
 
   final AuthProvider _auth = AuthProvider();
 
   @override
   void dispose() {
     _emailController.dispose();
-    _password2Controller.dispose();
+    _nameController.dispose();
+    _usernameController.dispose();
     _passwordController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    final BottomPopup _bottomPopup = BottomPopup(context: context);
+
     return Container(
       height: widget.height,
       width: widget.width,
@@ -66,107 +72,129 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
             style: TextStyle(
                 color: Blue, fontSize: 24, fontWeight: FontWeight.w600),
           ),
-          Column(
-            children: [
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                decoration: BoxDecoration(
-                    border: Border.all(color: Grey),
-                    borderRadius: BorderRadius.circular(10)),
-                child: TextFormField(
-                  controller: _emailController,
-                  keyboardType: TextInputType.emailAddress,
-                  cursorColor: Orange,
-                  style: TextStyle(
-                    fontSize: 20,
-                    color: OffWhite,
-                  ),
-                  decoration: InputDecoration(
-                      icon: Icon(Icons.mail_outline, color: Blue),
-                      labelText: widget.locale.translate('emailPlaceholder'),
-                      // "Email Address",
-                      border: InputBorder.none,
-                      labelStyle: TextStyle(color: Blue)),
-                ),
-              ),
-              SizedBox(height: 20),
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                decoration: BoxDecoration(
-                    border: Border.all(color: Grey),
-                    borderRadius: BorderRadius.circular(10)),
-                child: TextFormField(
-                  controller: _passwordController,
-                  obscureText: !_passwordVisible,
-                  cursorColor: Orange,
-                  style: TextStyle(
-                    fontSize: 20,
-                    color: OffWhite,
-                  ),
-                  decoration: InputDecoration(
-                    icon: Icon(
-                      Icons.vpn_key,
-                      color: Blue,
+          Form(
+            key: _formKey,
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  TextFormField(
+                    controller: _emailController,
+                    keyboardType: TextInputType.emailAddress,
+                    cursorColor: Orange,
+                    style: TextStyle(
+                      fontSize: 20,
+                      color: OffWhite,
                     ),
-                    labelText: widget.locale.translate('passwordPlaceholder'),
-                    // "Password",
-                    labelStyle: TextStyle(color: Blue),
-                    border: InputBorder.none,
-                    suffixIcon: _passwordEmpty
-                        ? null
-                        : IconButton(
-                            icon: Icon(
-                              _passwordVisible
-                                  ? Icons.visibility
-                                  : Icons.visibility_off,
-                              color: LightGrey,
-                            ),
-                            onPressed: () {
-                              setState(() {
-                                _passwordVisible = !_passwordVisible;
-                              });
-                            },
-                          ),
-                  ),
-                  onChanged: (value) {
-                    setState(() {
-                      value.length > 0
-                          ? _passwordEmpty = false
-                          : _passwordEmpty = true;
-                    });
-                  },
-                ),
-              ),
-              widget.newAccount
-                  ? Container(
-                      margin: EdgeInsets.only(top: 20),
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                      decoration: BoxDecoration(
-                          border: Border.all(color: Grey),
-                          borderRadius: BorderRadius.circular(10)),
-                      child: TextFormField(
-                        controller: _password2Controller,
-                        obscureText: true,
-                        cursorColor: Orange,
-                        style: TextStyle(
-                          fontSize: 20,
-                          color: OffWhite,
-                        ),
-                        decoration: InputDecoration(
-                            icon: Icon(
-                              Icons.vpn_key,
-                              color: Blue,
-                            ),
-                            labelText: widget.locale
-                                .translate('passwordConfirmPlaceholder'),
-                            // "Confirm Password",
-                            border: InputBorder.none,
-                            labelStyle: TextStyle(color: Blue)),
+                    decoration: textInputDecoration.copyWith(
+                      labelText: widget.locale.translate('emailPlaceholder'),
+                      prefixIcon: Icon(
+                        Icons.mail_outline,
+                        color: Blue,
                       ),
-                    )
-                  : Container()
-            ],
+                    ),
+                    validator: (value) {
+                      if (RegExp(
+                              r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+                          .hasMatch(value)) return null;
+                      _bottomPopup
+                          .showErrorFlushBar("Enter a Valid Email Address");
+                      return "";
+                    },
+                  ),
+                  SizedBox(height: 20),
+                  TextFormField(
+                    controller: _passwordController,
+                    obscureText: !_passwordVisible,
+                    cursorColor: Orange,
+                    style: TextStyle(
+                      fontSize: 20,
+                      color: OffWhite,
+                    ),
+                    decoration: textInputDecoration.copyWith(
+                      labelText: widget.locale.translate('passwordPlaceholder'),
+                      prefixIcon: Icon(
+                        Icons.vpn_key,
+                        color: Blue,
+                      ),
+                      suffixIcon: _passwordEmpty
+                          ? null
+                          : IconButton(
+                              icon: Icon(
+                                _passwordVisible
+                                    ? Icons.visibility
+                                    : Icons.visibility_off,
+                                color: LightGrey,
+                              ),
+                              onPressed: () {
+                                setState(() {
+                                  _passwordVisible = !_passwordVisible;
+                                });
+                              },
+                            ),
+                    ),
+                    onChanged: (value) {
+                      setState(() {
+                        value.length > 0
+                            ? _passwordEmpty = false
+                            : _passwordEmpty = true;
+                      });
+                    },
+                    validator: (value) {
+                      Pattern pattern =
+                          r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$';
+                      if (RegExp(pattern).hasMatch(value)) {
+                        return null;
+                      }
+                      _bottomPopup.showErrorFlushBar(
+                          "Make sure your password contains at least one upper case letter, lower case letter, digit and a special character!");
+                      return "";
+                    },
+                  ),
+                  widget.newAccount
+                      ? Padding(
+                          padding: const EdgeInsets.only(top: 20.0),
+                          child: TextFormField(
+                            controller: _nameController,
+                            cursorColor: Orange,
+                            style: TextStyle(
+                              fontSize: 20,
+                              color: OffWhite,
+                            ),
+                            decoration: textInputDecoration.copyWith(
+                              labelText:
+                                  widget.locale.translate('namePlaceholder'),
+                              prefixIcon: Icon(
+                                Icons.person_pin,
+                                color: Blue,
+                              ),
+                            ),
+                          ),
+                        )
+                      : Container(),
+                  widget.newAccount
+                      ? Padding(
+                          padding: const EdgeInsets.only(top: 20.0),
+                          child: TextFormField(
+                            controller: _usernameController,
+                            cursorColor: Orange,
+                            style: TextStyle(
+                              fontSize: 20,
+                              color: OffWhite,
+                            ),
+                            decoration: textInputDecoration.copyWith(
+                              labelText: widget.locale
+                                  .translate('usernamePlaceholder'),
+                              prefixIcon: Icon(
+                                Icons.person_outline,
+                                color: Blue,
+                              ),
+                            ),
+                          ),
+                        )
+                      : Container(),
+                ],
+              ),
+            ),
           ),
           Column(
             children: [
@@ -179,31 +207,24 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                   onTap: _loading
                       ? null
                       : () async {
-                          setState(() {
-                            _loading = true;
-                          });
+                          if (_formKey.currentState.validate()) {
+                            setState(() {
+                              _loading = true;
+                            });
 
-                          dynamic result = widget.newAccount
-                              ? await _signUp()
-                              : await _login();
+                            dynamic result = widget.newAccount
+                                ? await _signUp()
+                                : await _login();
 
-                          print({'out': result});
+                            if (result.runtimeType == PlatformException) {
+                              _bottomPopup
+                                  .showErrorFlushBar(result.message.toString());
 
-                          if (result.runtimeType == PlatformException)
-                            Flushbar(
-                              icon: Icon(Icons.error_outline,
-                                  color: Colors.redAccent),
-                              leftBarIndicatorColor: Colors.redAccent,
-                              message: result.message.toString(),
-                              duration: Duration(seconds: 3),
-                              isDismissible: true,
-                            )..show(context);
-                          else
-                            Navigator.popAndPushNamed(context, '/home-page');
-
-                          setState(() {
-                            _loading = false;
-                          });
+                              setState(() {
+                                _loading = false;
+                              });
+                            }
+                          }
                         },
                   child: Ink(
                     height: 55,
@@ -280,16 +301,15 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
       _emailController.text,
       _passwordController.text,
     );
-    print({'function': result.runtimeType});
     return result;
   }
 
   Future _signUp() async {
     dynamic result = await _auth.emailRegistration(
-      _emailController.text,
-      _passwordController.text,
-      _password2Controller.text,
-    );
+        _emailController.text,
+        _passwordController.text,
+        _nameController.text,
+        _usernameController.text);
     return result;
   }
 }

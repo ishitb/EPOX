@@ -46,7 +46,7 @@
         
         <!-- FOR GOOGLE MAPS -->
         <meta-data android:name="com.google.android.geo.API_KEY"
-               android:value="AIzaSyBdyFZobgX03No-ewZbBjVxhuSx4yBW49U"/>
+               android:value="AIzaSyCrnGdAm_9aNxViu_CCMMyKvy7eKFtljwo"/>
     </application>
 
     <!-- FOR GEOTAGGING -->

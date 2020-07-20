@@ -5,7 +5,8 @@
     "signUpHead": "Create New Account",
     "emailPlaceholder": "Email Address",
     "passwordPlaceholder": "Password",
-    "passwordConfirmPlaceholder": "Confirm Password",
+    "namePlaceholder": "Name",
+    "usernamePlaceholder": "Username",
     "loginButton": "Login",
     "signUpButton": "Sign Up",
     "backButton": "Go Back"
