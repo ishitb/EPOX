@@ -77,6 +77,9 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
             child: SingleChildScrollView(
               child: Column(
                 children: [
+                  SizedBox(
+                    height: 5,
+                  ),
                   TextFormField(
                     controller: _emailController,
                     keyboardType: TextInputType.emailAddress,
@@ -139,16 +142,18 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                             : _passwordEmpty = true;
                       });
                     },
-                    validator: (value) {
-                      Pattern pattern =
-                          r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$';
-                      if (RegExp(pattern).hasMatch(value)) {
-                        return null;
-                      }
-                      _bottomPopup.showErrorFlushBar(
-                          "Make sure your password contains at least one upper case letter, lower case letter, digit and a special character!");
-                      return "";
-                    },
+                    validator: widget.newAccount
+                        ? (value) {
+                            Pattern pattern =
+                                r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$';
+                            if (RegExp(pattern).hasMatch(value)) {
+                              return null;
+                            }
+                            _bottomPopup.showErrorFlushBar(
+                                "Make sure your password contains at least one upper case letter, lower case letter, digit and a special character!");
+                            return "";
+                          }
+                        : null,
                   ),
                   widget.newAccount
                       ? Padding(

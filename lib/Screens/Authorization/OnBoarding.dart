@@ -92,8 +92,10 @@ class _OnBoardingState extends State<OnBoarding> {
                       child: Ink(
                         padding: EdgeInsets.symmetric(vertical: 20),
                         decoration: BoxDecoration(
-                            border: Border.all(color: Orange),
-                            borderRadius: BorderRadius.circular(20)),
+                          border: Border.all(color: Orange),
+                          borderRadius: BorderRadius.circular(20),
+                          color: DarkBlue,
+                        ),
                         child: Text(
                           _locale.translate('loginHead'),
                           // "Login to Account",

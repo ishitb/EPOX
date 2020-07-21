@@ -8,8 +8,6 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:camera/camera.dart';
 import 'package:provider/provider.dart';
 
-import 'Screens/HomePage/HomePage.dart';
-import 'package:epox_flutter/Screens/Authorization/OnBoarding.dart';
 import 'Services/Localization/AppLocalizations.dart';
 
 List<CameraDescription> cameras;
@@ -21,8 +19,6 @@ Future<void> main() async {
   } on CameraException catch (e) {
     print(e);
   }
-
-  final AuthProvider _auth = AuthProvider();
 
   runApp(
     MultiProvider(

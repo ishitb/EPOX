@@ -1,7 +1,6 @@
 import 'package:epox_flutter/Services/Databases/UserDatabase.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:epox_flutter/Services/Authentication/UserModel.dart';
-import 'package:flutter/services.dart';
 
 class AuthProvider {
   final FirebaseAuth _auth = FirebaseAuth.instance;

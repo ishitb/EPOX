@@ -40,3 +40,5 @@ InputDecoration textInputDecoration = InputDecoration(
     borderRadius: BorderRadius.circular(10),
   ),
 );
+
+BoxShadow onboardButtonShadow = BoxShadow();

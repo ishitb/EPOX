@@ -5,6 +5,7 @@ import 'package:epox_flutter/Services/Authentication/UserModel.dart';
 
 import 'package:epox_flutter/Screens/Authorization/OnBoarding.dart';
 import 'package:epox_flutter/Screens/HomePage/HomePage.dart';
+import 'package:epox_flutter/Screens/HomePage/Pages/Temp/TempPage.dart';
 
 class Wrapper extends StatelessWidget {
   final cameras;
@@ -16,8 +17,9 @@ class Wrapper extends StatelessWidget {
 
     return user == null
         ? OnBoarding()
-        : HomePage(
-            cameras: cameras,
-          );
+        // : HomePage(
+        //     cameras: cameras,
+        //   );
+        : TempPage();
   }
 }

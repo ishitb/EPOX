@@ -27,7 +27,7 @@ class _HomePageState extends State<HomePage> {
                 ProfilePage(),
                 MainPage(cameras: widget.cameras),
                 // ProfilePage()
-                TempPage(),
+                // TempPage(),
               ],
             ),
           ),

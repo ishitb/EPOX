@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:epox_flutter/Screens/HomePage/Pages/Temp/TempPage.dart';
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
 import 'package:path_provider/path_provider.dart';
@@ -204,7 +205,14 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
                                 color: OffWhite,
                                 size: 60,
                               ),
-                              onTap: () {},
+                              onTap: () {
+                                // Navigator.push(
+                                //   context,
+                                //   MaterialPageRoute(
+                                //     builder: (context) => TempPage(),
+                                //   ),
+                                // );
+                              },
                             ),
                           ),
                         ],

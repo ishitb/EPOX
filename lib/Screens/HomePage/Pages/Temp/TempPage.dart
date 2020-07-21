@@ -2,6 +2,11 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:google_maps_webservice/places.dart';
+import 'package:location/location.dart' as MainLocation;
+import 'package:flutter_google_places/flutter_google_places.dart';
+
+import 'package:epox_flutter/Shared/Colors.dart';
 
 class TempPage extends StatefulWidget {
   @override
@@ -9,39 +14,134 @@ class TempPage extends StatefulWidget {
 }
 
 class TempPageState extends State<TempPage> {
+  LatLng _initialPosition = LatLng(0, 0);
+  MainLocation.Location _location = MainLocation.Location();
   Completer<GoogleMapController> _controller = Completer();
 
-  static final CameraPosition _kGooglePlex = CameraPosition(
-    target: LatLng(37.42796133580664, -122.085749655962),
-    zoom: 14.4746,
-  );
-
-  static final CameraPosition _kLake = CameraPosition(
-      bearing: 192.8334901395799,
-      target: LatLng(37.43296265331129, -122.08832357078792),
-      tilt: 59.440717697143555,
-      zoom: 19.151926040649414);
+  @override
+  void dispose() {
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
-      body: GoogleMap(
-        mapType: MapType.hybrid,
-        initialCameraPosition: _kGooglePlex,
-        onMapCreated: (GoogleMapController controller) {
-          _controller.complete(controller);
-        },
+    return Scaffold(
+      body: Stack(
+        children: [
+          GoogleMap(
+            zoomControlsEnabled: false,
+            initialCameraPosition: CameraPosition(
+              target: _initialPosition,
+              zoom: 10,
+            ),
+            onMapCreated: (GoogleMapController controller) {
+              _controller.complete(controller);
+            },
+            // myLocationEnabled: true,
+            myLocationButtonEnabled: false,
+          ),
+          SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(
+                vertical: 20.0,
+                horizontal: 30,
+              ),
+              child: Align(
+                alignment: Alignment.topCenter,
+                child: Material(
+                  child: InkWell(
+                    onTap: _searchLocation,
+                    splashColor: Grey,
+                    child: Ink(
+                      height: 60,
+                      width: MediaQuery.of(context).size.width,
+                      color: OffWhite,
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 20.0),
+                        child: Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            "Search Location...",
+                            style: TextStyle(
+                              color: LightGrey,
+                              fontSize: 20,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          )
+        ],
       ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: _goToTheLake,
-        label: Text('To the lake!'),
-        icon: Icon(Icons.directions_boat),
+      floatingActionButton: FloatingActionButton(
+        onPressed: _findSelf,
+        backgroundColor: DarkBlue,
+        foregroundColor: Orange,
+        child: Icon(Icons.location_searching),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
+    );
+  }
+
+  void _findSelf() async {
+    GoogleMapController _mapsController = await _controller.future;
+
+    _location.onLocationChanged.listen((l) {
+      _mapsController.animateCamera(
+        CameraUpdate.newCameraPosition(
+          CameraPosition(
+            target: LatLng(
+              l.latitude,
+              l.longitude,
+            ),
+            zoom: 16,
+          ),
+        ),
+      );
+    });
+  }
+
+  void _changeLocation({double latitude, double longitude}) async {
+    GoogleMapController _mapsController = await _controller.future;
+
+    _mapsController.animateCamera(
+      CameraUpdate.newCameraPosition(
+        CameraPosition(
+          target: LatLng(
+            latitude,
+            longitude,
+          ),
+          zoom: 16,
+        ),
       ),
     );
   }
 
-  Future<void> _goToTheLake() async {
-    final GoogleMapController controller = await _controller.future;
-    controller.animateCamera(CameraUpdate.newCameraPosition(_kLake));
+  Future<void> _searchLocation() async {
+    Prediction _prediction = await PlacesAutocomplete.show(
+      context: context,
+      apiKey: "AIzaSyCrnGdAm_9aNxViu_CCMMyKvy7eKFtljwo",
+      mode: Mode.overlay,
+      language: 'en',
+      components: [
+        new Component(
+          Component.country,
+          'in',
+        ),
+      ],
+    );
+    PlacesDetailsResponse response = await GoogleMapsPlaces(
+      apiKey: "AIzaSyCrnGdAm_9aNxViu_CCMMyKvy7eKFtljwo",
+    ).getDetailsByPlaceId(_prediction.placeId);
+
+    // print(response.result.geometry.location);
+    _changeLocation(
+      latitude: response.result.geometry.location.lat,
+      longitude: response.result.geometry.location.lng,
+    );
   }
 }
