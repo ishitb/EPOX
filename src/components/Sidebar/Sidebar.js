@@ -58,7 +58,7 @@ class Sidebar extends React.Component {
       >
         <div className="logo">
           <a
-            href="https://github.com/basic-bhavya"
+            href="https://rural.nic.in/"
             className="simple-text logo-mini"
           >
             <div className="logo-img">
@@ -66,7 +66,7 @@ class Sidebar extends React.Component {
             </div>
           </a>
           <a
-            href="https://github.com/basic-bhavya"
+            href="https://rural.nic.in/"
             className="simple-text logo-normal"
           >
             PCI ADMIN PANEL

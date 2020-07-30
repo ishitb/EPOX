@@ -170,7 +170,7 @@ class Header extends React.Component {
                   </p>
                 </Link>
               </NavItem>
-              <Dropdown
+              {/* <Dropdown
                 nav
                 isOpen={this.state.dropdownOpen}
                 toggle={(e) => this.dropdownToggle(e)}
@@ -186,7 +186,7 @@ class Header extends React.Component {
                   <DropdownItem tag="a">Another Action</DropdownItem>
                   <DropdownItem tag="a">Something else here</DropdownItem>
                 </DropdownMenu>
-              </Dropdown>
+              </Dropdown> */}
               <NavItem>
                 <Link to="#pablo" className="nav-link btn-rotate">
                   <i className="nc-icon nc-settings-gear-65" />

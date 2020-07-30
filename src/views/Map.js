@@ -16,35 +16,25 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-import React from "react";
+import React, { useState } from "react";
 // react plugin used to create google maps
 import {
   withScriptjs,
   withGoogleMap,
   GoogleMap,
   Marker,
+  InfoWindow,
 } from "react-google-maps";
+
+// react-loading
+import ReactLoading from "react-loading";
+
 // reactstrap components
 import { Card, CardHeader, CardBody, Row, Col } from "reactstrap";
+
+// Custom components
 import firebaseDb from "../Firebase";
 import MarkerClusterer from "react-google-maps/lib/components/addons/MarkerClusterer";
-
-const sendtoDb = (e) => {
-  var sev = Math.random() * 10;
-  firebaseDb
-    .collection("coords")
-    .add({
-      lat: e.latLng.lat(),
-      lng: e.latLng.lng(),
-      severity: sev,
-    })
-    .then(() => {
-      console.log("inserted with severity=", sev);
-    })
-    .catch((err) => {
-      if (err) console.log(err);
-    });
-};
 
 // ! Remove later
 const options = {
@@ -59,147 +49,20 @@ function createKey(location) {
 // ! -------------------------->
 
 const MapWrapper = withScriptjs(
-  withGoogleMap((props) => (
-    <GoogleMap
-      onClick={(e) => sendtoDb(e)}
-      defaultZoom={5}
-      defaultCenter={{ lat: 20.593684, lng: 78.96288 }}
-      defaultOptions={{
-        scrollwheel: true, //we disable de scroll over the map, it is a really annoing when you scroll through page
-        // styles: [
-        //   {
-        //     featureType: "water",
-        //     stylers: [
-        //       {
-        //         saturation: 43,
-        //       },
-        //       {
-        //         lightness: -11,
-        //       },
-        //       {
-        //         hue: "#0088ff",
-        //       },
-        //     ],
-        //   },
-        //   {
-        //     featureType: "road",
-        //     elementType: "geometry.fill",
-        //     stylers: [
-        //       {
-        //         hue: "#ff0000",
-        //       },
-        //       {
-        //         saturation: -100,
-        //       },
-        //       {
-        //         lightness: 99,
-        //       },
-        //     ],
-        //   },
-        //   {
-        //     featureType: "road",
-        //     elementType: "geometry.stroke",
-        //     stylers: [
-        //       {
-        //         color: "#808080",
-        //       },
-        //       {
-        //         lightness: 54,
-        //       },
-        //     ],
-        //   },
-        //   {
-        //     featureType: "landscape.man_made",
-        //     elementType: "geometry.fill",
-        //     stylers: [
-        //       {
-        //         color: "#ece2d9",
-        //       },
-        //     ],
-        //   },
-        //   {
-        //     featureType: "poi.park",
-        //     elementType: "geometry.fill",
-        //     stylers: [
-        //       {
-        //         color: "#ccdca1",
-        //       },
-        //     ],
-        //   },
-        //   {
-        //     featureType: "road",
-        //     elementType: "labels.text.fill",
-        //     stylers: [
-        //       {
-        //         color: "#767676",
-        //       },
-        //     ],
-        //   },
-        //   {
-        //     featureType: "road",
-        //     elementType: "labels.text.stroke",
-        //     stylers: [
-        //       {
-        //         color: "#ffffff",
-        //       },
-        //     ],
-        //   },
-        //   {
-        //     featureType: "poi",
-        //     stylers: [
-        //       {
-        //         visibility: "off",
-        //       },
-        //     ],
-        //   },
-        //   {
-        //     featureType: "landscape.natural",
-        //     elementType: "geometry.fill",
-        //     stylers: [
-        //       {
-        //         visibility: "on",
-        //       },
-        //       {
-        //         color: "#b8cb93",
-        //       },
-        //     ],
-        //   },
-        //   {
-        //     featureType: "poi.park",
-        //     stylers: [
-        //       {
-        //         visibility: "on",
-        //       },
-        //     ],
-        //   },
-        //   {
-        //     featureType: "poi.sports_complex",
-        //     stylers: [
-        //       {
-        //         visibility: "on",
-        //       },
-        //     ],
-        //   },
-        //   {
-        //     featureType: "poi.medical",
-        //     stylers: [
-        //       {
-        //         visibility: "on",
-        //       },
-        //     ],
-        //   },
-        //   {
-        //     featureType: "poi.business",
-        //     stylers: [
-        //       {
-        //         visibility: "simplified",
-        //       },
-        //     ],
-        //   },
-        // ],
-      }}
-    >
-      {/* {
+  withGoogleMap((props) => {
+    const [selectedMark, setMark] = useState();
+
+    return (
+      <GoogleMap
+        // onClick={(e) => sendtoDb(e)}
+        defaultZoom={5}
+        defaultCenter={{ lat: 20.593684, lng: 78.96288 }}
+        defaultOptions={{
+          scrollwheel: true,
+          // styles: [mapStyles],
+        }}
+      >
+        {/* {
         <MarkerClusterer options={options}>
           {(clusterer) =>
             Object.keys(props.markers).map((id) => (
@@ -212,52 +75,85 @@ const MapWrapper = withScriptjs(
           }
         </MarkerClusterer>
       } */}
-      {Object.keys(props.markers).map((id) => (
-        <Marker
-          key={id}
-          position={{ lat: props.markers[id].lat, lng: props.markers[id].lng }}
-          icon={
-            props.markers[id].severity < 5
-              ? "https://projects.voanews.com/south-china-sea/img/map/icon-larger_dot--green.png"
-              : "https://fossdroid.com/images/icons/com.eibriel.reddot.3.png"
-          }
-        ></Marker>
-      ))}
-    </GoogleMap>
-  ))
+        {props.markers.map((mark) => {
+          console.log(mark);
+          return (
+            <Marker
+              key={mark.time}
+              position={{
+                lat: mark.latitude,
+                lng: mark.longitude,
+              }}
+              icon={
+                mark.severity < 5
+                  ? "https://projects.voanews.com/south-china-sea/img/map/icon-larger_dot--green.png"
+                  : "https://fossdroid.com/images/icons/com.eibriel.reddot.3.png"
+              }
+              onClick={() => {
+                setMark(mark);
+                console.log(mark);
+              }}
+            ></Marker>
+          );
+        })}
+        {selectedMark && (
+          <InfoWindow
+            position={{
+              lat: selectedMark.latitude,
+              lng: selectedMark.longitude,
+            }}
+            onCloseClick={() => setMark(null)}
+          >
+            <div
+              style={{
+                width: "150px",
+                height: "auto",
+              }}
+            >
+              <p>{selectedMark.comments}</p>
+              <a
+                href={selectedMark.imageURL}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <img
+                  src={selectedMark.imageURL}
+                  style={{
+                    maxWidth: "100%",
+                    height: "auto",
+                  }}
+                />
+              </a>
+            </div>
+          </InfoWindow>
+        )}
+      </GoogleMap>
+    );
+  })
 );
 
 class Map extends React.Component {
   constructor() {
     super();
     this.state = {
-      markers: {},
+      markers: [],
+      selectedMarker: null,
     };
   }
 
-  componentDidMount() {
-    // firebaseDb.child("coords").on("value", (snapshot) => {
-    //   var markers = { ...snapshot.val() };
-    //   this.setState({
-    //     markers: markers,
-    //   });
-    //   if (snapshot.val()) {
-    //     Object.keys(markers).map((id) => {
-    //       // console.log("lat:", markers[id].lat, " lng:", markers[id].lng);
-    //     });
-    //     // console.log("--------------------------------------------");
-    //     // console.log(snapshot.val());
-    //     // this.setState({markers: Object.keys(snapshot.val())})
-    //   }
-    // });
+  getMarkers = () => {
     firebaseDb
-      .collection("coords")
+      .collection("submissions")
       .get()
       .then((Snapshot) => {
-        const coordData = Snapshot.docs.map((doc) => doc.data());
-        // console.log(coordData);
-        this.setState({ markers: coordData });
+        const subData = Snapshot.docs.map((doc) => doc.data());
+        // console.log("subdata is ", subData);
+        this.setState({ markers: subData });
       });
+  };
+
+  componentDidMount() {
+    this.getMarkers();
   }
 
   render() {
@@ -266,9 +162,6 @@ class Map extends React.Component {
         <div className="map-content">
           <Row>
             <Col md="12">
-              {/* <Card>
-                <CardHeader>Google maps</CardHeader>
-                <CardBody> */}
               <div
                 id="map"
                 className="map"
@@ -291,8 +184,6 @@ class Map extends React.Component {
                   markers={this.state.markers}
                 />
               </div>
-              {/* </CardBody>
-              </Card> */}
             </Col>
           </Row>
         </div>

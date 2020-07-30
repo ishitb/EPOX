@@ -1,21 +1,3 @@
-/*!
-
-=========================================================
-* Paper Dashboard React - v1.2.0
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/paper-dashboard-react
-* Copyright 2020 Creative Tim (https://www.creative-tim.com)
-
-* Licensed under MIT (https://github.com/creativetimofficial/paper-dashboard-react/blob/master/LICENSE.md)
-
-* Coded by Creative Tim
-
-=========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-*/
 import React from "react";
 
 // reactstrap components
@@ -30,34 +12,85 @@ import {
 } from "reactstrap";
 import firebaseDb from "../Firebase";
 
+import StatusSelector from "../components/StatusSelector";
+import { TextField, Grid } from "@material-ui/core";
+
 class Tables extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       users: [],
       submissions: [],
+      query: "",
+      submissionsFiltered: [],
     };
   }
 
+  handleSearchChange = (e) => {
+    const query = e.target.value;
+    console.log(query);
+    const sf = this.state.submissions.filter((sub) => {
+      // return sub.status > 1;
+      return sub.comments.toLowerCase().includes(query.toLowerCase());
+    });
+
+    console.log();
+
+    this.setState({
+      query: query,
+      submissionsFiltered: sf,
+    });
+  };
+
+  // getFilterData = () => {
+  //   this.setState({
+  //     submissionsFiltered: [],
+  //   });
+  //   firebaseDb
+  //     .collection("submissions")
+  //     .where("comments", ">=", this.query)
+  //     .get()
+  //     .then((snapshot) => {
+  //       snapshot.forEach((doc) => {
+  //         var subs = {
+  //           id: doc.id,
+  //           ...doc.data(),
+  //         };
+  //         this.setState({
+  //           submissionsFiltered: this.state.submissionsFiltered.concat(subs),
+  //         });
+  //       });
+  //     });
+  // };
+
   updateData = () => {
-    // ! Get users
+    // ! Get submissions
+    firebaseDb
+      .collection("submissions")
+      .get()
+      .then((snapshot) => {
+        snapshot.forEach((doc) => {
+          var subs = {
+            id: doc.id,
+            ...doc.data(),
+          };
+          this.setState({
+            submissions: this.state.submissions.concat(subs),
+          });
+        });
+      });
+
     firebaseDb
       .collection("users")
       .get()
       .then((snapshot) => {
         snapshot.forEach((doc) => {
-          const subs = doc.data().submissions;
-          var sub;
-
-          if (typeof subs !== "undefined" && subs.length > 0) {
-            sub = {
-              emailID: doc.data().emailID,
-              submissions: doc.data().submissions,
-            };
-          }
-
+          var users = {
+            id: doc.id,
+            ...doc.data(),
+          };
           this.setState({
-            users: this.state.users.concat(doc.data()),
+            users: this.state.users.concat(users),
           });
         });
       });
@@ -82,9 +115,7 @@ class Tables extends React.Component {
             <Col md="12">
               <Card>
                 <CardHeader>
-                  <CardTitle tag="h4">
-                    All Users {console.log(this.state.users)}
-                  </CardTitle>
+                  <CardTitle tag="h4">All Users</CardTitle>
                 </CardHeader>
                 <CardBody>
                   <Table responsive>
@@ -98,50 +129,13 @@ class Tables extends React.Component {
                     </thead>
                     <tbody>
                       {this.state.users.map((user) => (
-                        <tr key={user.emailID}>
+                        <tr key={user.id}>
                           <td>{user.username}</td>
                           <td>{user.name}</td>
                           <td>{user.noOfSubmissions}</td>
                           <td>{user.credibilityScore}</td>
                         </tr>
                       ))}
-                      {/* {console.log(this.state.submissions)} */}
-                      {/* <tr>
-                        <td>Minerva Hooper</td>
-                        <td>Curaçao</td>
-                        <td>Sinaai-Waas</td>
-                        <td className="text-right">$23,789</td>
-                      </tr>
-                      <tr>
-                        <td>Sage Rodriguez</td>
-                        <td>Netherlands</td>
-                        <td>Baileux</td>
-                        <td className="text-right">$56,142</td>
-                      </tr>
-                      <tr>
-                        <td>Philip Chaney</td>
-                        <td>Korea, South</td>
-                        <td>Overland Park</td>
-                        <td className="text-right">$38,735</td>
-                      </tr>
-                      <tr>
-                        <td>Doris Greene</td>
-                        <td>Malawi</td>
-                        <td>Feldkirchen in Kärnten</td>
-                        <td className="text-right">$63,542</td>
-                      </tr>
-                      <tr>
-                        <td>Mason Porter</td>
-                        <td>Chile</td>
-                        <td>Gloucester</td>
-                        <td className="text-right">$78,615</td>
-                      </tr>
-                      <tr>
-                        <td>Jon Porter</td>
-                        <td>Portugal</td>
-                        <td>Gloucester</td>
-                        <td className="text-right">$98,615</td>
-                      </tr> */}
                     </tbody>
                   </Table>
                 </CardBody>
@@ -151,7 +145,14 @@ class Tables extends React.Component {
             <Col md="12">
               <Card>
                 <CardHeader>
-                  <CardTitle tag="h4">All Submissions</CardTitle>
+                  <Grid container justify="space-between">
+                    <CardTitle tag="h4">All Submissions</CardTitle>
+                    <TextField
+                      onChange={this.handleSearchChange}
+                      label="Search by username"
+                      variant="filled"
+                    />
+                  </Grid>
                 </CardHeader>
                 <CardBody>
                   <Table responsive>
@@ -161,92 +162,84 @@ class Tables extends React.Component {
                         <th>Time</th>
                         <th>Severity</th>
                         <th>Status</th>
+                        <th className="text-left">Preview</th>
                       </tr>
                     </thead>
                     <tbody>
-                      {this.state.users.map((user) => {
-                        console.log(user);
-                        return user.submissions.map((sub, index) => (
-                          <tr key={(user.emailID, index)}>
-                            <td>{user.name}</td>
-                            <td>{sub.time}</td>
-                            <td>{sub.severity}</td>
-                            <td>{sub.status}</td>
-                          </tr>
-                        ));
-                      })}
+                      {/* {console.log("submissions=", this.state.submissions)} */}
+                      {this.state.query === ""
+                        ? this.state.submissions.map((sub) => {
+                            return (
+                              <tr key={sub.id}>
+                                <td>
+                                  {/* {this.state.users == "undefined"
+                                ? console.log("hello")
+                                : console.log(
+                                    this.state.users.map(
+                                      (user) => user.submissions[1]
+                                    )
+                                  )} */}
+                                </td>
+                                <td>{sub.time}</td>
+                                <td>{sub.severity}</td>
+                                {/* <td>{sub.status}</td> */}
+                                <td style={{ width: "20%" }}>
+                                  <StatusSelector
+                                    status={sub.status}
+                                    id={sub.id}
+                                  />{" "}
+                                </td>
+                                <td style={{ width: "10px" }}>
+                                  <a
+                                    href={sub.imageURL}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                  >
+                                    <img src={sub.imageURL} />
+                                  </a>
+                                </td>
+                              </tr>
+                            );
+                          })
+                        : this.state.submissionsFiltered.length > 0
+                        ? this.state.submissionsFiltered.map((sub) => {
+                            return (
+                              <tr key={sub.id}>
+                                <td>
+                                  {/* {this.state.users == "undefined"
+                                ? console.log("hello")
+                                : console.log(
+                                    this.state.users.map(
+                                      (user) => user.submissions[1]
+                                    )
+                                  )} */}
+                                </td>
+                                <td>{sub.time}</td>
+                                <td>{sub.severity}</td>
+                                <td style={{ width: "20%" }}>
+                                  <StatusSelector
+                                    status={sub.status}
+                                    id={sub.id}
+                                  />{" "}
+                                </td>
+                                <td style={{ width: "10px" }}>
+                                  <a
+                                    href={sub.imageURL}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                  >
+                                    <img src={sub.imageURL} />
+                                  </a>
+                                </td>
+                              </tr>
+                            );
+                          })
+                        : ""}
                     </tbody>
                   </Table>
                 </CardBody>
               </Card>
             </Col>
-            {/* // ! ----------------------------> */}
-            {/* <Col md="12">
-              <Card className="card-plain">
-                <CardHeader>
-                  <CardTitle tag="h4">Table on Plain Background</CardTitle>
-                  <p className="card-category">
-                    Here is a subtitle for this table
-                  </p>
-                </CardHeader>
-                <CardBody>
-                  <Table responsive>
-                    <thead className="text-primary">
-                      <tr>
-                        <th>Name</th>
-                        <th>Country</th>
-                        <th>City</th>
-                        <th className="text-right">Salary</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <td>Dakota Rice</td>
-                        <td>Niger</td>
-                        <td>Oud-Turnhout</td>
-                        <td className="text-right">$36,738</td>
-                      </tr>
-                      <tr>
-                        <td>Minerva Hooper</td>
-                        <td>Curaçao</td>
-                        <td>Sinaai-Waas</td>
-                        <td className="text-right">$23,789</td>
-                      </tr>
-                      <tr>
-                        <td>Sage Rodriguez</td>
-                        <td>Netherlands</td>
-                        <td>Baileux</td>
-                        <td className="text-right">$56,142</td>
-                      </tr>
-                      <tr>
-                        <td>Philip Chaney</td>
-                        <td>Korea, South</td>
-                        <td>Overland Park</td>
-                        <td className="text-right">$38,735</td>
-                      </tr>
-                      <tr>
-                        <td>Doris Greene</td>
-                        <td>Malawi</td>
-                        <td>Feldkirchen in Kärnten</td>
-                        <td className="text-right">$63,542</td>
-                      </tr>
-                      <tr>
-                        <td>Mason Porter</td>
-                        <td>Chile</td>
-                        <td>Gloucester</td>
-                        <td className="text-right">$78,615</td>
-                      </tr>
-                      <tr>
-                        <td>Jon Porter</td>
-                        <td>Portugal</td>
-                        <td>Gloucester</td>
-                        <td className="text-right">$98,615</td>
-                      </tr>
-                    </tbody>
-                  </Table>
-                </CardBody>
-              </Card>
-            </Col> */}
           </Row>
         </div>
       </>

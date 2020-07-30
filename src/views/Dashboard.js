@@ -37,6 +37,7 @@ import {
 } from "variables/charts.js";
 
 import firebaseDb from "../Firebase";
+import UpdateButton from "../components/UpdateButton";
 
 class Dashboard extends React.Component {
   constructor(props) {
@@ -71,22 +72,6 @@ class Dashboard extends React.Component {
     this.updateData();
   }
 
-  hoverin() {
-    this.setState({
-      updateHover: true,
-      updateClass: "fas fa-sync-alt fa-spin update-icon",
-    });
-  }
-
-  hoverout() {
-    this.setState({
-      updateHover: false,
-      updateClass: "fas fa-sync-alt update-icon",
-    });
-
-    console.log(`this is ${this.state.updateClass}`);
-  }
-
   render() {
     return (
       <>
@@ -115,7 +100,8 @@ class Dashboard extends React.Component {
                   <hr />
                   <div className="stats">
                     {/* // ! TO USE <i className="fas fa-sync-alt update-icon" /> */}
-                    <i className={this.state.updateClass} />{" "}
+                    <UpdateButton updateData={this.updateData} />
+                    {/* <i className={this.state.updateClass} />{" "}
                     <a
                       onMouseEnter={() => {
                         this.hoverin();
@@ -127,7 +113,7 @@ class Dashboard extends React.Component {
                       href="#"
                     >
                       Update Now
-                    </a>
+                    </a> */}
                   </div>
                 </CardFooter>
               </Card>
@@ -217,7 +203,8 @@ class Dashboard extends React.Component {
                 <CardFooter>
                   <hr />
                   <div className="stats">
-                    <i className="fas fa-sync-alt" /> Update now
+                    <UpdateButton updateData={this.updateData} />
+                    {/* <i className="fas fa-sync-alt" /> Update now */}
                   </div>
                 </CardFooter>
               </Card>
@@ -239,10 +226,10 @@ class Dashboard extends React.Component {
                   />
                 </CardBody>
                 <CardFooter>
-                  <hr />
+                  {/* <hr />
                   <div className="stats">
                     <i className="fa fa-history" /> Updated 3 minutes ago
-                  </div>
+                  </div> */}
                 </CardFooter>
               </Card>
             </Col>
