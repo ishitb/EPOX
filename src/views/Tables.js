@@ -179,9 +179,10 @@ class Tables extends React.Component {
                                       (user) => user.submissions[1]
                                     )
                                   )} */}
+                                  {sub.username}
                                 </td>
                                 <td>{sub.time}</td>
-                                <td>{sub.severity}</td>
+                                <td>{sub.pci}</td>
                                 {/* <td>{sub.status}</td> */}
                                 <td style={{ width: "20%" }}>
                                   <StatusSelector

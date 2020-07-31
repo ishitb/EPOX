@@ -79,13 +79,13 @@ const MapWrapper = withScriptjs(
           console.log(mark);
           return (
             <Marker
-              key={mark.time}
+              key={mark.id}
               position={{
                 lat: mark.latitude,
                 lng: mark.longitude,
               }}
               icon={
-                mark.severity < 5
+                mark.pci < 5
                   ? "https://projects.voanews.com/south-china-sea/img/map/icon-larger_dot--green.png"
                   : "https://fossdroid.com/images/icons/com.eibriel.reddot.3.png"
               }
@@ -104,6 +104,7 @@ const MapWrapper = withScriptjs(
             }}
             onCloseClick={() => setMark(null)}
           >
+            {/* {console.log(selectedMark)} */}
             <div
               style={{
                 width: "150px",
@@ -146,7 +147,10 @@ class Map extends React.Component {
       .collection("submissions")
       .get()
       .then((Snapshot) => {
-        const subData = Snapshot.docs.map((doc) => doc.data());
+        const subData = Snapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
         // console.log("subdata is ", subData);
         this.setState({ markers: subData });
       });
