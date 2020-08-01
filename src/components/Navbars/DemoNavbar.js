@@ -131,7 +131,7 @@ class Header extends React.Component {
                 type="button"
                 ref={this.sidebarToggle}
                 className="navbar-toggler"
-                onClick={() => this.openSidebar()}
+                onClick={() => this.props.location.pathname == '/admin/login' ? null :this.openSidebar()}
               >
                 <span className="navbar-toggler-bar bar1" />
                 <span className="navbar-toggler-bar bar2" />

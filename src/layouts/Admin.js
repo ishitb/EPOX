@@ -48,15 +48,28 @@ class Dashboard extends React.Component {
     this.setState({ backgroundColor: color });
   };
   render() {
+    console.log(this.props.location.pathname);
     return (
       <div className="wrapper">
-        <Sidebar
-          {...this.props}
-          routes={routes}
-          bgColor={this.state.backgroundColor}
-          activeColor={this.state.activeColor}
-        />
-        <div className="main-panel" ref={this.mainPanel}>
+        {this.props.location.pathname == "/admin/login" ? (
+          <div></div>
+        ) : (
+          <Sidebar
+            {...this.props}
+            routes={routes}
+            bgColor={this.state.backgroundColor}
+            activeColor={this.state.activeColor}
+          />
+        )}
+        <div
+          className="main-panel"
+          ref={this.mainPanel}
+          style={
+            this.props.location.pathname == "/admin/login"
+              ? { width: "100%" }
+              : { display: "block" }
+          }
+        >
           <DemoNavbar {...this.props} />
           <Switch>
             {routes.map((prop, key) => {
