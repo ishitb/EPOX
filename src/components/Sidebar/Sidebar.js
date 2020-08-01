@@ -57,24 +57,19 @@ class Sidebar extends React.Component {
         data-active-color={this.props.activeColor}
       >
         <div className="logo">
-          <a
-            href="https://rural.nic.in/"
-            className="simple-text logo-mini"
-          >
+          <a href="https://rural.nic.in/" className="simple-text logo-mini">
             <div className="logo-img">
               <img src={logo} alt="mord logo" />
             </div>
           </a>
-          <a
-            href="https://rural.nic.in/"
-            className="simple-text logo-normal"
-          >
+          <a href="https://rural.nic.in/" className="simple-text logo-normal">
             PCI ADMIN PANEL
           </a>
         </div>
         <div className="sidebar-wrapper" ref={this.sidebar}>
           <Nav>
             {this.props.routes.map((prop, key) => {
+              if (prop.name === "Login") return null;
               return (
                 <li
                   className={

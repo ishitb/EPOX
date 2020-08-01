@@ -23,6 +23,8 @@ import Typography from "views/Typography.js";
 import TableList from "views/Tables.js";
 import Maps from "views/Map.js";
 import UserPage from "views/User.js";
+import Login from "components/Login";
+import UpgradeToPro from "views/Upgrade";
 
 var routes = [
   {
@@ -39,6 +41,13 @@ var routes = [
   //   component: Icons,
   //   layout: "/admin",
   // },
+  {
+    path: "/login",
+    name: "Login",
+    icon: "nc-icon nc-lock-circle-open",
+    component: Login,
+    layout: "/admin",
+  },
   {
     path: "/maps",
     name: "Maps",

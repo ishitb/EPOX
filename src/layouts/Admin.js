@@ -25,6 +25,7 @@ import DemoNavbar from "components/Navbars/DemoNavbar.js";
 import Footer from "components/Footer/Footer.js";
 import Sidebar from "components/Sidebar/Sidebar.js";
 // import FixedPlugin from "components/FixedPlugin/FixedPlugin.js";
+import Login from "components/Login";
 
 import routes from "routes.js";
 
@@ -36,9 +37,17 @@ class Dashboard extends React.Component {
     this.state = {
       backgroundColor: "black",
       activeColor: "info",
+      loggedin: false,
     };
     this.mainPanel = React.createRef();
   }
+
+  setlogin = () => {
+    this.setState({
+      loggedin: true,
+    });
+  };
+
   componentDidMount() {
     if (navigator.platform.indexOf("Win") > -1) {
       ps = new PerfectScrollbar(this.mainPanel.current);

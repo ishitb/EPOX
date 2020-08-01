@@ -188,7 +188,7 @@ class Header extends React.Component {
                 </DropdownMenu>
               </Dropdown> */}
               <NavItem>
-                <Link to="#pablo" className="nav-link btn-rotate">
+                <Link to="login" className="nav-link btn-rotate">
                   <i className="nc-icon nc-settings-gear-65" />
                   <p>
                     <span className="d-lg-none d-md-block">Account</span>

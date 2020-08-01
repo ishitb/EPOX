@@ -171,7 +171,7 @@ class Dashboard extends React.Component {
                 <CardFooter>
                   <hr />
                   <div className="stats">
-                    <i className="far fa-calendar" /> Since 01/07/20
+                    <i className="far fa-calendar" /> Out of total Cases
                   </div>
                 </CardFooter>
               </Card>
@@ -234,7 +234,7 @@ class Dashboard extends React.Component {
               </Card>
             </Col>
           </Row>
-          <Row>
+          {/* <Row>
             <Col md="4">
               <Card>
                 <CardHeader>
@@ -287,7 +287,7 @@ class Dashboard extends React.Component {
                 </CardFooter>
               </Card>
             </Col>
-          </Row>
+          </Row> */}
         </div>
       </>
     );

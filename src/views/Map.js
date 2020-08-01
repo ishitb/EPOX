@@ -111,7 +111,9 @@ const MapWrapper = withScriptjs(
                 height: "auto",
               }}
             >
-              <p>{selectedMark.comments}</p>
+              <p style={{ textAlign: "center", fontWeight: "700" }}>
+                {selectedMark.username}
+              </p>
               <a
                 href={selectedMark.imageURL}
                 target="_blank"
@@ -125,6 +127,9 @@ const MapWrapper = withScriptjs(
                   }}
                 />
               </a>
+              <p style={{ textAlign: "center", marginTop: "10px" }}>
+                {selectedMark.comments}
+              </p>
             </div>
           </InfoWindow>
         )}
