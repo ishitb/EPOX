@@ -20,6 +20,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 import { createBrowserHistory } from "history";
 import { Router, Route, Switch, Redirect } from "react-router-dom";
+import App from './App'
 
 import "bootstrap/dist/css/bootstrap.css";
 import "assets/scss/paper-dashboard.scss?v=1.2.0";
@@ -27,18 +28,12 @@ import "assets/demo/demo.css";
 import "perfect-scrollbar/css/perfect-scrollbar.css";
 
 import AdminLayout from "layouts/Admin.js";
-import { StoreProvider } from "easy-peasy";
+import { StoreProvider, useStoreState } from "easy-peasy";
 import store from "components/easy-peasy/store";
-const hist = createBrowserHistory();
 
 ReactDOM.render(
   <StoreProvider store={store}>
-    <Router history={hist}>
-      <Switch>
-        <Route path="/admin" render={(props) => <AdminLayout {...props} />} />
-        <Redirect to="/admin/login" />
-      </Switch>
-    </Router>
+    <App />
   </StoreProvider>,
   document.getElementById("root")
 );

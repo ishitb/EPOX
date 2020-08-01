@@ -1,45 +1,38 @@
-/*!
+import firebaseDb from "../Firebase";
+import { ObjectFlags } from "typescript";
 
-=========================================================
-* Paper Dashboard React - v1.2.0
-=========================================================
+async function getChartData() {
+  await firebaseDb
+    .collection("chartData")
+    .doc("cd")
+    .get()
+    .then((snapshot) => {
+      console.log("snapshot is ", snapshot.data());
+      return snapshot.data();
+    });
+}
 
-* Product Page: https://www.creative-tim.com/product/paper-dashboard-react
-* Copyright 2020 Creative Tim (https://www.creative-tim.com)
+const totalData = Object.keys(() => getChartData()).map((val) => val["total"]);
+const labels = Object.keys(() => getChartData()).map((val) => val.month);
+console.log("total is ", totalData);
 
-* Licensed under MIT (https://github.com/creativetimofficial/paper-dashboard-react/blob/master/LICENSE.md)
-
-* Coded by Creative Tim
-
-=========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-*/
 const dashboard24HoursPerformanceChart = {
   data: (canvas) => {
     return {
-      labels: [
-        "Jan",
-        "Feb",
-        "Mar",
-        "Apr",
-        "May",
-        "Jun",
-        "Jul",
-        "Aug",
-        "Sep",
-        "Oct",
-      ],
+      labels: labels,
+      // labels: [
+      //   "Jan",
+      //   "Feb",
+      //   "Mar",
+      //   "Apr",
+      //   "May",
+      //   "Jun",
+      //   "Jul",
+      //   "Aug",
+      //   "Sep",
+      //   "Oct",
+      // ],
       datasets: [
-        {
-          borderColor: "#6bd098",
-          backgroundColor: "#6bd098",
-          pointRadius: 0,
-          pointHoverRadius: 0,
-          borderWidth: 3,
-          data: [300, 310, 316, 322, 330, 326, 333, 345, 338, 354],
-        },
         {
           borderColor: "#f17e5d",
           backgroundColor: "#f17e5d",
@@ -55,6 +48,15 @@ const dashboard24HoursPerformanceChart = {
           pointHoverRadius: 0,
           borderWidth: 3,
           data: [370, 394, 415, 409, 425, 445, 460, 450, 478, 484],
+        },
+        {
+          borderColor: "#6bd098",
+          backgroundColor: "#6bd098",
+          pointRadius: 0,
+          pointHoverRadius: 0,
+          borderWidth: 3,
+          // data: [300, 310, 316, 322, 330, 326, 333, 345, 338, 354],
+          data: totalData,
         },
       ],
     };
@@ -103,6 +105,8 @@ const dashboard24HoursPerformanceChart = {
     },
   },
 };
+
+console.log(dashboard24HoursPerformanceChart);
 
 const dashboardEmailStatisticsChart = {
   data: (canvas) => {
@@ -213,8 +217,14 @@ const dashboardNASDAQChart = {
   },
 };
 
-module.exports = {
+export {
   dashboard24HoursPerformanceChart,
   dashboardEmailStatisticsChart,
   dashboardNASDAQChart,
 };
+
+// module.exports = {
+//   dashboard24HoursPerformanceChart,
+//   dashboardEmailStatisticsChart,
+//   dashboardNASDAQChart,
+// };

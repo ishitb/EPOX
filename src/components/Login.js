@@ -15,6 +15,8 @@ import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
+import { Redirect } from "react-router";
+import { useStoreActions } from "easy-peasy";
 
 function Copyright() {
   return (
@@ -54,13 +56,14 @@ export default function Login(props) {
   const [username, setUser] = useState("");
   const [password, setPass] = useState("");
   const [error, setError] = useState(false);
-  const [cookies, setCookies] = useCookies(["login", props.loggedin]);
-
+  const [loggedin, setlogin] = useState(false);
+  // const [cookies, setCookies] = useCookies(["login", props.loggedin]);
+  const store_login = useStoreActions((action) => action.login);
   const handleSubmit = (e) => {
     e.preventDefault();
     if (username == "admin" && password == "admin") {
-      props.setlogin();
-      setCookies("login", props.loggedin);
+      window.location.pathname = "/admin/dashboard";
+      store_login(true);
     } else {
       setError(true);
     }
@@ -74,7 +77,7 @@ export default function Login(props) {
           <LockOutlinedIcon />
         </Avatar>
         <Typography component="h1" variant="h5">
-          Sign in
+          Login
         </Typography>
         <form className={classes.form} onSubmit={handleSubmit}>
           <TextField
@@ -119,7 +122,7 @@ export default function Login(props) {
             color="primary"
             className={classes.submit}
           >
-            Sign In
+            Login
           </Button>
           {/* <Grid container>
             <Grid item xs>

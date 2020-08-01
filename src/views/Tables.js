@@ -28,7 +28,6 @@ class Tables extends React.Component {
 
   handleSearchChange = (e) => {
     const query = e.target.value;
-    console.log(query);
     const sf = this.state.submissions.filter((sub) => {
       // return sub.status > 1;
       return sub.comments.toLowerCase().includes(query.toLowerCase());

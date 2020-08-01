@@ -64,7 +64,6 @@ class Dashboard extends React.Component {
           monthlyCases: data.monthlyCases,
           criticalCases: data.criticalCases,
         });
-        console.log(data);
       });
   };
 

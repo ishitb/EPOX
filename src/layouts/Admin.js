@@ -48,7 +48,6 @@ class Dashboard extends React.Component {
     this.setState({ backgroundColor: color });
   };
   render() {
-    console.log(this.props.location.pathname);
     return (
       <div className="wrapper">
         {this.props.location.pathname == "/admin/login" ? (

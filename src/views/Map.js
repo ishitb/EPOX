@@ -76,7 +76,6 @@ const MapWrapper = withScriptjs(
         </MarkerClusterer>
       } */}
         {props.markers.map((mark) => {
-          console.log(mark);
           return (
             <Marker
               key={mark.id}
@@ -91,7 +90,6 @@ const MapWrapper = withScriptjs(
               }
               onClick={() => {
                 setMark(mark);
-                console.log(mark);
               }}
             ></Marker>
           );
