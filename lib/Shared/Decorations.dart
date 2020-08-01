@@ -6,6 +6,9 @@ InputDecoration textInputDecoration = InputDecoration(
   labelStyle: TextStyle(
     color: Blue,
   ),
+  hintStyle: TextStyle(
+    color: Blue,
+  ),
   errorBorder: OutlineInputBorder(
     borderSide: BorderSide(
       color: Colors.redAccent,

@@ -1,11 +1,16 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:geolocator/geolocator.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 
 import 'package:epox_flutter/Services/Authentication/AuthProvider.dart';
 import 'package:epox_flutter/Services/Authentication/UserModel.dart';
+import 'package:epox_flutter/Services/Databases/UserDatabase.dart';
+import 'package:epox_flutter/Services/Databases/SubmissionProvider.dart';
+import 'package:epox_flutter/Services/Databases/SubmissionModel.dart';
 
+import 'BottomCard.dart';
+import 'ProfileAppBar.dart';
+import 'TopCard.dart';
 import 'package:epox_flutter/Shared/Colors.dart';
 
 class ProfilePage extends StatefulWidget with WidgetsBindingObserver {
@@ -21,28 +26,6 @@ class _ProfilePageState extends State<ProfilePage> {
 
   final AuthProvider _auth = AuthProvider();
 
-  Future<Position> _getCurrentLocation() async {
-    setState(() {
-      loading = true;
-    });
-    bool geoLocationStatus = await Geolocator().isLocationServiceEnabled();
-
-    if (geoLocationStatus) {
-      Position position = await Geolocator()
-          .getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
-
-      setState(() {
-        longitude = position.longitude;
-        latitude = position.latitude;
-        loading = false;
-      });
-      return position;
-    } else {
-      locationServicesEnabled = false;
-      return null;
-    }
-  }
-
   @override
   void initState() {
     super.initState();
@@ -57,57 +40,102 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<UserModel>(context);
-    final snapshots = Provider.of<QuerySnapshot>(context);
+    Size size = MediaQuery.of(context).size;
 
-    return SafeArea(
-      child: Padding(
-        padding: const EdgeInsets.only(top: 50.0),
-        child: Scaffold(
-            body: Center(
-          child: loading
-              ? CircularProgressIndicator()
-              : Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
+    return StreamBuilder<UserDataModel>(
+      stream: UserDatabase(uid: user.uid).userData,
+      builder: (context, snapshot) {
+        return Scaffold(
+          backgroundColor: DarkBlue,
+          body: snapshot.data == null
+              ? Center(
+                  child: CircularProgressIndicator(),
+                )
+              : Stack(
                   children: [
-                    Text("Latitude: $latitude, Longitude: $longitude"),
-                    RaisedButton(
-                      child: Text(
-                        "Get Location",
-                        style: TextStyle(
-                          color: OffWhite,
-                          fontSize: 24,
+                    TopCard(
+                      width: size.width,
+                      height: size.height,
+                      username: snapshot.data.username,
+                      name: snapshot.data.name,
+                      emailID: snapshot.data.emailID,
+                    ),
+                    ProfileAppBar(),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SizedBox(
+                          height: 20.0,
                         ),
-                      ),
-                      color: Theme.of(context).accentColor,
-                      onPressed: () async {
-                        _getCurrentLocation();
-                      },
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 50),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "Submissions Reported",
+                                style: TextStyle(
+                                  color: LightGrey,
+                                  fontSize: 36,
+                                ),
+                              ),
+                              Divider(
+                                height: 10.0,
+                                color: Grey,
+                              ),
+                            ],
+                          ),
+                        ),
+                        SizedBox(
+                          height: 20.0,
+                        ),
+                        StreamBuilder<List<Map>>(
+                            stream: SubmissionProvider(
+                              userReportedSubmissions: snapshot.data.submissions
+                                  .map((submission) => submission.documentID)
+                                  .toList(),
+                            ).userSubmission,
+                            builder: (context, submissionSnapshot) {
+                              return GestureDetector(
+                                onTap: () {
+                                  for (var data in submissionSnapshot.data) {
+                                    print(data);
+                                  }
+                                },
+                                child: CarouselSlider(
+                                  items: [1, 2, 3, 4, 5, 6, 7].map((e) {
+                                    return Container(
+                                      color: Orange,
+                                      // height: 300,
+                                      width: 350,
+                                    );
+                                  }).toList(),
+                                  options: CarouselOptions(
+                                    height: 300,
+                                    aspectRatio: 16 / 9,
+                                    viewportFraction: 0.8,
+                                    initialPage: 0,
+                                    enableInfiniteScroll: false,
+                                    reverse: false,
+                                    enlargeCenterPage: true,
+                                    scrollDirection: Axis.horizontal,
+                                  ),
+                                ),
+                              );
+                            }),
+                      ],
                     ),
-                    RaisedButton(
-                      child: Text("LogOut"),
-                      onPressed: () {
-                        _auth.signOut();
-                      },
+                    BottomCard(
+                      width: size.width,
+                      height: size.height,
+                      credibilityScore: snapshot.data.credibilityScore,
+                      noOfSubmissions: snapshot.data.noOfSubmissions,
                     ),
-                    Text(user.email)
-                    // TextField(
-                    //   onTap: () async {
-                    //     Prediction p = await PlacesAutocomplete.show(
-                    //       context: context,
-                    //       apiKey: 'AIzaSyBVS0np5RpJWLFxEcIY78uHgA23tP4IZZ0',
-                    //       mode: Mode.overlay, // Mode.fullscreen
-                    //       language: "en",
-                    //       components: [
-                    //         new Component(Component.country, "in"),
-                    //       ],
-                    //     );
-                    //     print(p);
-                    //   },
-                    // ),
                   ],
                 ),
-        )),
-      ),
+        );
+      },
     );
   }
 }

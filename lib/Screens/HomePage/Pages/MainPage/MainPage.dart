@@ -1,11 +1,11 @@
 import 'dart:io';
 
-import 'package:epox_flutter/Screens/HomePage/Pages/Temp/TempPage.dart';
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:image_picker/image_picker.dart';
 
+import 'package:epox_flutter/Screens/HomePage/Pages/SubmitionPage/SubmitionPage.dart';
 import 'package:epox_flutter/Shared/Colors.dart';
 
 class MainPage extends StatefulWidget {
@@ -17,6 +17,7 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
   CameraController controller;
+  final key = GlobalKey();
   List<CameraDescription> cameras;
   int selectedCameraIndex;
   String imagePath;
@@ -76,7 +77,7 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
     return Scaffold(
       body: AnimatedSwitcher(
         duration: Duration(milliseconds: 300),
-        child: imagePath == null
+        child: _image == null
             ? Stack(
                 children: [
                   AnimatedContainer(
@@ -205,13 +206,19 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
                                 color: OffWhite,
                                 size: 60,
                               ),
-                              onTap: () {
-                                // Navigator.push(
-                                //   context,
-                                //   MaterialPageRoute(
-                                //     builder: (context) => TempPage(),
-                                //   ),
-                                // );
+                              onTap: () async {
+                                await Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => SubmitionPage(
+                                      imageFile: _image,
+                                    ),
+                                  ),
+                                );
+
+                                setState(() {
+                                  _image = null;
+                                });
                               },
                             ),
                           ),

@@ -1,12 +1,11 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:epox_flutter/Screens/Wrapper.dart';
 import 'package:epox_flutter/Services/Authentication/AuthProvider.dart';
 import 'package:epox_flutter/Services/Authentication/UserModel.dart';
-import 'package:epox_flutter/Services/Databases/UserDatabase.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:camera/camera.dart';
 import 'package:provider/provider.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 import 'Services/Localization/AppLocalizations.dart';
 
@@ -20,15 +19,16 @@ Future<void> main() async {
     print(e);
   }
 
+  String currentUserID;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  await _auth.currentUser().then((value) => currentUserID = value.uid);
+
   runApp(
     MultiProvider(
       providers: [
         StreamProvider<UserModel>(
           create: (_) => AuthProvider().user,
         ),
-        StreamProvider<QuerySnapshot>(
-          create: (_) => UserDatabase().userData,
-        )
       ],
       child: MaterialApp(
         title: 'Team: EPOX',

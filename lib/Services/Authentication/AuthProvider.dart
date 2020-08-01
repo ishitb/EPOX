@@ -24,6 +24,7 @@ class AuthProvider {
       AuthResult result = await _auth.signInWithEmailAndPassword(
           email: email, password: password);
       FirebaseUser user = result.user;
+
       return _userFromFirebase(user);
     } catch (e) {
       print(e);

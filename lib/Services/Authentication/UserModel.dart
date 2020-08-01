@@ -9,17 +9,17 @@ class UserModel {
   );
 }
 
-class UserDataMode {
+class UserDataModel {
   final String emailID, name, username;
   final int noOfSubmissions, credibilityScore;
-  final List<SubmissionModel> submission;
+  final List submissions;
 
-  UserDataMode({
+  UserDataModel({
     this.emailID,
     this.name,
     this.username,
     this.noOfSubmissions,
     this.credibilityScore,
-    this.submission,
+    this.submissions,
   });
 }
