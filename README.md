@@ -12,8 +12,13 @@
 An app with a very intuitive user interface so than anyone is able to use it to report any kind of road damages just by clicking a picture.
 
 *To run the source code and test the app:-*
- 
- 1. 
+> Requirements :
+> Make sure you have adb installed on your system and also Flutter v1.21.0 from the [master channel](https://www.github.com/flutter/flutter). 
+> Before starting the app make sure you have a device connected over the adb.
+* Clone the repository to your system
+* Open Terminal and navigate to **App** Folder
+* Run **flutter pub get** to install the flutter libraries used in the project.
+* Run **flutter run** to start the application on you connected device.
 
 ### Admin Dashboard
 A web browser based admin dashboard which would make it easier for the authorities to keep a record of the location of the damages on roads and the status of the complaint
