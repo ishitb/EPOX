@@ -37,7 +37,6 @@ import {
 } from "reactstrap";
 
 import routes from "routes.js";
-
 class Header extends React.Component {
   constructor(props) {
     super(props);
@@ -151,7 +150,7 @@ class Header extends React.Component {
             navbar
             className="justify-content-end"
           >
-            <form>
+            {/* <form>
               <InputGroup className="no-border">
                 <Input placeholder="Search..." />
                 <InputGroupAddon addonType="append">
@@ -160,7 +159,7 @@ class Header extends React.Component {
                   </InputGroupText>
                 </InputGroupAddon>
               </InputGroup>
-            </form>
+            </form> */}
             <Nav navbar>
               <NavItem>
                 <Link to="#pablo" className="nav-link btn-magnify">
@@ -188,7 +187,8 @@ class Header extends React.Component {
                 </DropdownMenu>
               </Dropdown> */}
               <NavItem>
-                <Link to="login" className="nav-link btn-rotate">
+                <Link to="#" className="nav-link btn-rotate">
+                  {/* <Link to={{pathname: '/'}} className="nav-link btn-rotate"> */}
                   <i className="nc-icon nc-settings-gear-65" />
                   <p>
                     <span className="d-lg-none d-md-block">Account</span>

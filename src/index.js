@@ -27,15 +27,18 @@ import "assets/demo/demo.css";
 import "perfect-scrollbar/css/perfect-scrollbar.css";
 
 import AdminLayout from "layouts/Admin.js";
-
+import { StoreProvider } from "easy-peasy";
+import store from "components/easy-peasy/store";
 const hist = createBrowserHistory();
 
 ReactDOM.render(
-  <Router history={hist}>
-    <Switch>
-      <Route path="/admin" render={(props) => <AdminLayout {...props} />} />
-      <Redirect to="/admin/dashboard" />
-    </Switch>
-  </Router>,
+  <StoreProvider store={store}>
+    <Router history={hist}>
+      <Switch>
+        <Route path="/admin" render={(props) => <AdminLayout {...props} />} />
+        <Redirect to="/admin/login" />
+      </Switch>
+    </Router>
+  </StoreProvider>,
   document.getElementById("root")
 );
