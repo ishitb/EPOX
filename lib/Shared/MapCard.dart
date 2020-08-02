@@ -1,5 +1,5 @@
 import 'package:epox_flutter/Screens/HomePage/Pages/ProfilePage/MapInfoCard.dart';
-import 'package:epox_flutter/Screens/HomePage/Pages/ProfilePage/SubmissionInfoPage.dart';
+import 'package:epox_flutter/Screens/HomePage/Pages/ProfilePage/UserSubmissions/SubmissionInfoPage.dart';
 import 'package:flutter/material.dart';
 
 import 'package:epox_flutter/Shared/Colors.dart';
@@ -93,7 +93,7 @@ class _MapCardState extends State<MapCard> {
                             location: widget.location,
                             date: widget.date,
                             time: widget.time,
-                            pci: 100.0 - widget.pci,
+                            pci: widget.pci,
                             status: widget.status,
                             imageURL: widget.imageURL,
                             comments: widget.comments,

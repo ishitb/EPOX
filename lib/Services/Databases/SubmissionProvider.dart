@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:epox_flutter/Services/Authentication/UserModel.dart';
@@ -52,10 +53,11 @@ class SubmissionProvider {
       newSubmissionData,
     );
 
-    String imageURL = await _uploadImage(imageFile, submissionRef.documentID);
+    List imageData = await _uploadImage(imageFile, submissionRef.documentID);
 
     await submissionRef.updateData({
-      'imageURL': imageURL,
+      'imageURL': imageData[0],
+      'pci': imageData[1],
     });
 
     return submissionRef;
@@ -78,7 +80,7 @@ class SubmissionProvider {
     );
   }
 
-  Future<String> _uploadImage(File image, String reportID) async {
+  Future<List> _uploadImage(File image, String reportID) async {
     final FirebaseStorage storage = FirebaseStorage.instance;
     StorageTaskSnapshot snapshot = await storage
         .ref()
@@ -87,16 +89,17 @@ class SubmissionProvider {
         .onComplete;
     final String imageURL = await snapshot.ref.getDownloadURL();
 
-    // var request = http.MultipartRequest(
-    //     'POST', Uri.parse('http://192.168.0.105:8000/image-upload'));
-    // String fileName = '$reportID.${image.path.toString().split('.').last}';
-    // request.files.add(http.MultipartFile(
-    //     'file', image.readAsBytes().asStream(), image.lengthSync(),
-    //     filename: fileName));
-    // var response = await request.send();
-    // print(response.statusCode);
+    var request = http.MultipartRequest(
+        'POST', Uri.parse('http://2fc773642848.ngrok.io//image-upload'));
+    String fileName = '$reportID.${image.path.toString().split('.').last}';
+    request.files.add(http.MultipartFile(
+        'file', image.readAsBytes().asStream(), image.lengthSync(),
+        filename: fileName));
+    var response = await request.send();
+    var responseString = await await http.Response.fromStream(response);
+    double pci = json.decode(responseString.body)['data'][0].toDouble();
 
-    return imageURL;
+    return [imageURL, pci];
   }
 
   List<Map> _getAllSubmissions(QuerySnapshot snapshot) {
