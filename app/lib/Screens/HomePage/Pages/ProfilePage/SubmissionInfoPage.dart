@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import 'package:epox_flutter/Shared/Colors.dart';
@@ -6,6 +7,7 @@ import 'package:epox_flutter/Shared/Colors.dart';
 class SubmissionInfoPage extends StatefulWidget {
   final String location, date, time;
   final double latitude, longitude, pci;
+  final int status;
 
   SubmissionInfoPage(
       {Key key,
@@ -14,14 +16,16 @@ class SubmissionInfoPage extends StatefulWidget {
       this.location,
       this.date,
       this.time,
-      this.pci})
+      this.pci,
+      this.status})
       : super(key: key);
 
   @override
   _SubmissionInfoPageState createState() => _SubmissionInfoPageState();
 }
 
-class _SubmissionInfoPageState extends State<SubmissionInfoPage> {
+class _SubmissionInfoPageState extends State<SubmissionInfoPage>
+    with SingleTickerProviderStateMixin {
   BitmapDescriptor markerIcon;
   bool screenLoaded = false;
 
@@ -33,17 +37,41 @@ class _SubmissionInfoPageState extends State<SubmissionInfoPage> {
     });
   }
 
+  // Animation Stuff
+  AnimationController _animationController;
+  Animation _animation;
+
   @override
   void initState() {
     setCustomMapPin();
 
-    Future.delayed(Duration(milliseconds: 1000)).then((value) {
+    Future.delayed(Duration(milliseconds: 800)).then((value) {
       setState(() {
         screenLoaded = true;
       });
     });
 
+    _animationController = AnimationController(
+        duration: Duration(milliseconds: 1000), vsync: this);
+    _animation = Tween<double>(
+      begin: 0.0,
+      end: 1.0,
+    ).animate(CurvedAnimation(
+      parent: _animationController,
+      curve: Curves.ease,
+    ));
+
+    _animationController.addListener(() {
+      setState(() {});
+    });
+
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
   }
 
   @override
@@ -52,81 +80,94 @@ class _SubmissionInfoPageState extends State<SubmissionInfoPage> {
       backgroundColor: DarkBlue,
       body: Column(
         children: [
-          Container(
-            decoration: BoxDecoration(
-              border: Border(
-                bottom: BorderSide(
-                  color: Blue,
-                  width: 2.5,
+          Stack(
+            children: [
+              Container(
+                height: MediaQuery.of(context).size.height / 2.5,
+                child: GoogleMap(
+                  initialCameraPosition: CameraPosition(
+                    target: LatLng(widget.latitude, widget.longitude),
+                    zoom: 16,
+                  ),
+                  zoomControlsEnabled: false,
+                  onMapCreated: (GoogleMapController controller) {},
+                  markers: Set<Marker>.of(
+                    <Marker>[
+                      Marker(
+                        markerId: MarkerId("random"),
+                        position: LatLng(widget.latitude, widget.longitude),
+                        icon: markerIcon,
+                      )
+                    ],
+                  ),
                 ),
               ),
-            ),
-            height: MediaQuery.of(context).size.height / 2.5,
-            child: GoogleMap(
-              initialCameraPosition: CameraPosition(
-                target: LatLng(widget.latitude, widget.longitude),
-                zoom: 16,
-              ),
-              zoomControlsEnabled: false,
-              onMapCreated: (GoogleMapController controller) {},
-              markers: Set<Marker>.of(
-                <Marker>[
-                  Marker(
-                    markerId: MarkerId("random"),
-                    position: LatLng(widget.latitude, widget.longitude),
-                    icon: markerIcon,
-                  )
-                ],
-              ),
-            ),
-          ),
-          AnimatedContainer(
-            duration: Duration(milliseconds: 500),
-            height: screenLoaded ? 70 : 0,
-            width: MediaQuery.of(context).size.width,
-            decoration: BoxDecoration(
-              color: Blue,
-              borderRadius: BorderRadius.vertical(
-                bottom: Radius.circular(15),
-              ),
-            ),
-            // padding: EdgeInsets.only(left: 15.0),
-            child: Padding(
-              padding: const EdgeInsets.only(left: 15.0),
-              child: Center(
-                child: Wrap(
-                  alignment: WrapAlignment.start,
-                  children: [
-                    Text(
-                      "Location:  ",
-                      style: TextStyle(
-                        color: LightGrey,
-                        fontSize: 20,
+              Positioned(
+                bottom: 0,
+                child: AnimatedContainer(
+                  duration: Duration(milliseconds: 500),
+                  height: screenLoaded ? 70 : 0,
+                  // height: _animation.value * 100,
+                  width: MediaQuery.of(context).size.width,
+                  decoration: BoxDecoration(
+                    color: Blue.withOpacity(0.8),
+                    borderRadius: BorderRadius.vertical(
+                      top: Radius.circular(15),
+                    ),
+                    border: Border.all(
+                      color: DarkBlue,
+                      width: 2.5,
+                    ),
+                  ),
+                  // padding: EdgeInsets.only(left: 15.0),
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 15.0),
+                    child: Center(
+                      child: Wrap(
+                        alignment: WrapAlignment.start,
+                        children: [
+                          Text(
+                            "Location:  ",
+                            style: TextStyle(
+                              color: LightGrey,
+                              fontSize: 20,
+                            ),
+                          ),
+                          Text(
+                            widget.location,
+                            style: TextStyle(
+                              color: OffWhite,
+                              fontSize: 22,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                    Text(
-                      widget.location,
-                      style: TextStyle(
-                        color: OffWhite,
-                        fontSize: 22,
-                      ),
-                    ),
-                  ],
+                  ),
                 ),
               ),
-            ),
+            ],
           ),
           SizedBox(
             height: 15.0,
           ),
-          Container(
+          AnimatedContainer(
+            duration: Duration(milliseconds: 500),
             padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
-            margin: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+            margin: EdgeInsets.symmetric(horizontal: 30.0, vertical: 10.0),
             decoration: BoxDecoration(
+                color: DarkBlue,
+                boxShadow: [
+                  BoxShadow(
+                    color: DarkGrey,
+                    blurRadius: screenLoaded ? 10.0 : 0.0,
+                    spreadRadius: screenLoaded ? 5.0 : 0.0,
+                  ),
+                ],
                 border: Border.all(
-              color: Orange,
-              width: 2.0,
-            )),
+                  color: Orange,
+                  width: 2.0,
+                )),
             child: Column(
               children: [
                 Row(
@@ -198,8 +239,8 @@ class _SubmissionInfoPageState extends State<SubmissionInfoPage> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 AnimatedContainer(
-                  duration: Duration(milliseconds: 500),
                   padding: EdgeInsets.all(15.0),
+                  duration: Duration(milliseconds: 500),
                   decoration: BoxDecoration(
                     color: DarkBlue,
                     boxShadow: [
@@ -210,42 +251,71 @@ class _SubmissionInfoPageState extends State<SubmissionInfoPage> {
                       ),
                     ],
                   ),
-                  height: 150,
-                  width: 150,
-                  child: Stack(
+                  height: MediaQuery.of(context).size.width / 2.5,
+                  width: MediaQuery.of(context).size.width / 2.5,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      SizedBox(
-                        height: 125,
-                        width: 125,
-                        child: CircularProgressIndicator(
-                          value: 1 - widget.pci / 100,
-                          backgroundColor: DarkGrey,
-                          strokeWidth: 2.5,
-                          valueColor: AlwaysStoppedAnimation<Color>(
-                            widget.pci < 20
-                                ? Colors.red[900]
-                                : widget.pci < 40
-                                    ? Orange
-                                    : widget.pci < 60
-                                        ? Colors.yellow[700]
-                                        : widget.pci < 80
-                                            ? Colors.green[300]
-                                            : Colors.green[800],
-                          ),
+                      Text(
+                        "Severity".toUpperCase(),
+                        style: TextStyle(
+                          color: Blue,
+                          fontSize: 24.0,
+                          fontWeight: FontWeight.w500,
                         ),
                       ),
-                      Align(
-                        alignment: Alignment.center,
-                        child: Text(
-                          "Severity".toUpperCase(),
-                          style: TextStyle(
-                            color: LightGrey,
-                            fontSize: 22.0,
-                          ),
+                      SizedBox(
+                        height: MediaQuery.of(context).size.width / 4,
+                        width: MediaQuery.of(context).size.width / 4,
+                        child: Stack(
+                          children: [
+                            SizedBox(
+                              height: MediaQuery.of(context).size.width / 4,
+                              width: MediaQuery.of(context).size.width / 4,
+                              child: CircularProgressIndicator(
+                                value: widget.pci * _animation.value / 100,
+                                backgroundColor: DarkGrey,
+                                strokeWidth: 4.5,
+                                valueColor: AlwaysStoppedAnimation<Color>(
+                                  widget.pci * _animation.value < 20
+                                      ? Colors.red[900]
+                                      : widget.pci * _animation.value < 40
+                                          ? Orange
+                                          : widget.pci * _animation.value < 60
+                                              ? Colors.yellow[700]
+                                              : widget.pci * _animation.value <
+                                                      80
+                                                  ? Colors.green[300]
+                                                  : Colors.green[800],
+                                ),
+                              ),
+                            ),
+                            Center(
+                              child: Text(
+                                "${(widget.pci * _animation.value).toStringAsFixed(2)}%",
+                                style: TextStyle(
+                                  fontSize: 24.0,
+                                  color: widget.pci * _animation.value < 20
+                                      ? Colors.red[900]
+                                      : widget.pci * _animation.value < 40
+                                          ? Orange
+                                          : widget.pci * _animation.value < 60
+                                              ? Colors.yellow[700]
+                                              : widget.pci * _animation.value <
+                                                      80
+                                                  ? Colors.green[300]
+                                                  : Colors.green[800],
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     ],
                   ),
+                  onEnd: () {
+                    _animationController.forward();
+                  },
                 ),
                 AnimatedContainer(
                   duration: Duration(milliseconds: 500),
@@ -260,32 +330,42 @@ class _SubmissionInfoPageState extends State<SubmissionInfoPage> {
                       ),
                     ],
                   ),
-                  height: 150,
-                  width: 150,
+                  height: MediaQuery.of(context).size.width / 2.5,
+                  width: MediaQuery.of(context).size.width / 2.5,
                   child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.end,
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          Icon(
-                            Icons.bug_report,
-                            color: Orange,
-                            size: 30.0,
-                          ),
-                          Text(
-                            "Reported",
-                            style: TextStyle(
-                              color: OffWhite,
-                              fontSize: 22.0,
-                            ),
-                          ),
-                        ],
+                      Align(
+                        alignment: Alignment.topLeft,
+                        child: Icon(
+                          // FontAwesomeIcons.resolving,
+                          Icons.new_releases,
+                          size: 40.0,
+                        ),
                       ),
                       Text(
                         "Status of Report",
-                        style: TextStyle(color: Blue, fontSize: 18.0),
+                        style: TextStyle(
+                          color: Blue,
+                          fontSize: 18.0,
+                        ),
+                      ),
+                      SizedBox(
+                        height: 10.0,
+                      ),
+                      Text(
+                        "Reported",
+                        style: TextStyle(
+                          color: widget.status == 0
+                              ? Colors.red[900]
+                              : widget.status == 1
+                                  ? Orange
+                                  : widget.status == 2
+                                      ? Colors.yellow[700]
+                                      : Colors.green[800],
+                          fontSize: 26.0,
+                        ),
                       ),
                     ],
                   ),

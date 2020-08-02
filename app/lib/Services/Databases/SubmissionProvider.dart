@@ -104,7 +104,7 @@ class SubmissionProvider {
       return {
         'latitude': submission.data['latitude'],
         'longitude': submission.data['longitude'],
-        'status': submission.data['status'],
+        'status': submission.data['status'].toInt(),
         'date': submission.data['date'],
         'time': submission.data['time'],
         'comments': submission.data['comments'],
@@ -130,7 +130,7 @@ class SubmissionProvider {
       return {
         'latitude': submission.data['latitude'],
         'longitude': submission.data['longitude'],
-        'status': submission.data['status'],
+        'status': submission.data['status'].toInt(),
         'date': submission.data['date'],
         'time': submission.data['time'],
         'comments': submission.data['comments'],

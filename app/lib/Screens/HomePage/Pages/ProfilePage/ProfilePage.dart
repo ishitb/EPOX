@@ -22,7 +22,8 @@ class ProfilePage extends StatefulWidget with WidgetsBindingObserver {
   _ProfilePageState createState() => _ProfilePageState();
 }
 
-class _ProfilePageState extends State<ProfilePage> {
+class _ProfilePageState extends State<ProfilePage>
+    with SingleTickerProviderStateMixin {
   double longitude = 0, latitude = 0;
   bool loading = false, locationServicesEnabled = true;
 
@@ -117,6 +118,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                               'Jasola Vihar',
                                           time: submission['time'],
                                           pci: submission['pci'],
+                                          status: submission['status'],
                                         );
                                       }).toList(),
                                       options: CarouselOptions(
