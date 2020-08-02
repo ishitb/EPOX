@@ -76,6 +76,11 @@ class Tables extends React.Component {
 
   componentDidMount() {
     this.updateData();
+pre    // this.state.submissions.sort((a, b) =>
+    //   a.date > b.date ? 1 : b.date > a.date ? -1 : 0
+    // );
+    // objs.sort((a,b) => (a.last_nom > b.last_nom) ? 1 : ((b.last_nom > a.last_nom) ? -1 : 0));
+    // console.log(submissions);
   }
 
   render() {
@@ -136,9 +141,10 @@ class Tables extends React.Component {
                   <Table responsive>
                     <thead className="text-primary">
                       <tr>
-                        <th>Email ID</th>
+                        <th>Name</th>
+                        <th>Date</th>
                         <th>Time</th>
-                        <th>Severity</th>
+                        <th>PCI</th>
                         <th>Status</th>
                         <th className="text-left">Preview</th>
                       </tr>
@@ -149,9 +155,10 @@ class Tables extends React.Component {
                             return (
                               <tr key={sub.id}>
                                 <td>{sub.username}</td>
+                                <td>{sub.date}</td>
                                 <td>{sub.time}</td>
-                                <td>{sub.pci}</td>
-                                {/* <td>{sub.status}</td> */}
+                                {/* <td>{sub.pci}</td> */}
+                                <td>{Math.round(Math.random() * 100)}</td>
                                 <td style={{ width: "20%" }}>
                                   <StatusSelector
                                     status={sub.status}
@@ -175,8 +182,8 @@ class Tables extends React.Component {
                             return (
                               <tr key={sub.id}>
                                 <td>{sub.username}</td>
+                                <td>{sub.date}</td>
                                 <td>{sub.time}</td>
-                                {/* <td>{sub.pci}</td> */}
                                 <td>{Math.round(Math.random() * 100)}</td>
                                 <td style={{ width: "20%" }}>
                                   <StatusSelector

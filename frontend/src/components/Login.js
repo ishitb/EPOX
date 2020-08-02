@@ -17,6 +17,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import { Redirect } from "react-router";
 import { useStoreActions } from "easy-peasy";
+import logo from "../assets/img/mord logo.jpg";
 
 function Copyright() {
   return (
@@ -33,12 +34,13 @@ function Copyright() {
 
 const useStyles = makeStyles((theme) => ({
   paper: {
-    marginTop: theme.spacing(8),
+    marginTop: theme.spacing(15),
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
   },
   avatar: {
+    transform: "scale(1.5)",
     margin: theme.spacing(1),
     backgroundColor: theme.palette.secondary.main,
   },
@@ -74,10 +76,11 @@ export default function Login(props) {
       <CssBaseline />
       <div className={classes.paper}>
         <Avatar className={classes.avatar}>
-          <LockOutlinedIcon />
+          {/* <LockOutlinedIcon /> */}
+          <img src={logo} alt="mord logo" />
         </Avatar>
-        <Typography component="h1" variant="h5">
-          Login
+        <Typography component="h1" variant="h5" style={{ marginTop: "10px" }}>
+          PCI Admin Panel
         </Typography>
         <form className={classes.form} onSubmit={handleSubmit}>
           <TextField
