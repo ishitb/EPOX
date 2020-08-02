@@ -9,23 +9,6 @@ admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
   databaseURL: "https://sihproject-epox.firebaseio.com",
 });
-// // Create and Deploy Your First Cloud Functions
-// // https://firebase.google.com/docs/functions/write-firebase-functions
-//
-
-// exports.updateGlobal = functions.firestore
-//   .document("/submissions/{id}")
-//   .onCreate((snapshot, context) => {
-//     console.log(snapshot.data());
-//     return admin
-//       .firestore()
-//       .collection("global")
-//       .doc("IRcogUtURyBiDMFoVgiI")
-//       .update({
-//         totalCases: admin.firestore.FieldValue.increment(1),
-//         monthlyCases: admin.firestore.FieldValue.increment(1),
-//       });
-//   });
 
 exports.updateGlobal = functions.firestore
   .document("/submissions/{id}")
@@ -59,7 +42,7 @@ exports.updateGlobal = functions.firestore
 
     monthObj[month] = {
       total: admin.firestore.FieldValue.increment(1),
-      monthName: monthNameTally[month],
+      month: monthNameTally[month],
     };
 
     admin.firestore().doc("chartData/cd").set(monthObj, {

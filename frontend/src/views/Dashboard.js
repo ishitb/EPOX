@@ -15,12 +15,14 @@ import {
 // other components
 import {
   dashboard24HoursPerformanceChart,
-  dashboardEmailStatisticsChart,
-  dashboardNASDAQChart,
+  // dashboardEmailStatisticsChart,
+  // dashboardNASDAQChart,
+  chartData,
 } from "variables/charts.js";
 
 import firebaseDb from "../Firebase";
 import UpdateButton from "../components/UpdateButton";
+import { data } from "jquery";
 
 class Dashboard extends React.Component {
   constructor(props) {
@@ -32,6 +34,8 @@ class Dashboard extends React.Component {
       criticalCases: "",
       resolvedCases: "",
       monthlyCases: "",
+      stateChartData: [],
+      graph: "",
     };
   }
 
@@ -48,10 +52,90 @@ class Dashboard extends React.Component {
           criticalCases: data.criticalCases,
         });
       });
+
+    let total = [];
+    let labels = [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec",
+    ];
+
+    firebaseDb
+      .collection("chartData")
+      .doc("cd")
+      .get()
+      .then((snapshot) => {
+        const Cdata = snapshot.data();
+        console.log("snapshot data is ", Cdata);
+        for (const month of labels) {
+          Object.keys(Cdata).map((index) => {
+            if (Cdata[index].month === month) {
+              total.push(parseInt(Cdata[index].total));
+            }
+          });
+        }
+
+        this.setState({
+          stateChartData: {
+            // labels: labels,
+            labels: labels,
+            datasets: [
+              // {
+              //   borderColor: "#6bd098",
+              //   backgroundColor: "#6bd098",
+              //   pointRadius: 0,
+              //   pointHoverRadius: 0,
+              //   borderWidth: 3,
+              //   data: [300, 310, 316, 322, 330, 326, 333, 345, 338, 354, 13, 14],
+              //   // data: total,
+              // },
+              // {
+              //   borderColor: "#f17e5d",
+              //   backgroundColor: "#f17e5d",
+              //   pointRadius: 0,
+              //   pointHoverRadius: 0,
+              //   borderWidth: 3,
+              //   data: [320, 340, 365, 360, 370, 385, 390, 384, 408, 420, 11, 12],
+              //   // data: total,
+              // },
+              {
+                borderColor: "#fcc468",
+                backgroundColor: "#fcc468",
+                pointRadius: 0,
+                pointHoverRadius: 0,
+                borderWidth: 3,
+                // data: [370, 394, 415, 409, 425, 445, 460, 450, 478, 484],
+                data: total,
+              },
+            ],
+          },
+        });
+      });
+
+    // (async () => {
+    //   if (await chartData) {
+    //     this.chartRef.chartInstance.update();
+    //   }
+    //   console.log(
+    //     "chartData is ",
+    //     await chartData(),
+    //     "and chartref is ",
+    //     this.chartRef
+    //   );
+    // })();
   };
 
   componentDidMount() {
-    this.updateData();
+    this.state.graph = this.updateData();
   }
 
   render() {
@@ -201,7 +285,83 @@ class Dashboard extends React.Component {
                 </CardHeader>
                 <CardBody>
                   <Line
-                    data={dashboard24HoursPerformanceChart.data}
+                    ref={(reference) => (this.chartRef = reference)}
+                    // data={dashboard24HoursPerformanceChart.data}
+                    data={this.state.stateChartData}
+                    // data={{
+                    //   labels: [
+                    //     "Jan",
+                    //     "Feb",
+                    //     "Mar",
+                    //     "Apr",
+                    //     "May",
+                    //     "Jun",
+                    //     "Jul",
+                    //     "Aug",
+                    //     "Sep",
+                    //     "Oct",
+                    //   ],
+                    //   datasets: [
+                    //     {
+                    //       borderColor: "#6bd098",
+                    //       backgroundColor: "#6bd098",
+                    //       pointRadius: 0,
+                    //       pointHoverRadius: 0,
+                    //       borderWidth: 3,
+                    //       data: [
+                    //         300,
+                    //         310,
+                    //         316,
+                    //         322,
+                    //         330,
+                    //         326,
+                    //         333,
+                    //         345,
+                    //         338,
+                    //         354,
+                    //       ],
+                    //     },
+                    //     {
+                    //       borderColor: "#f17e5d",
+                    //       backgroundColor: "#f17e5d",
+                    //       pointRadius: 0,
+                    //       pointHoverRadius: 0,
+                    //       borderWidth: 3,
+                    //       data: [
+                    //         320,
+                    //         340,
+                    //         365,
+                    //         360,
+                    //         370,
+                    //         385,
+                    //         390,
+                    //         384,
+                    //         408,
+                    //         420,
+                    //       ],
+                    //     },
+                    //     {
+                    //       borderColor: "#fcc468",
+                    //       backgroundColor: "#fcc468",
+                    //       pointRadius: 0,
+                    //       pointHoverRadius: 0,
+                    //       borderWidth: 3,
+                    //       data: [
+                    //         370,
+                    //         394,
+                    //         415,
+                    //         409,
+                    //         425,
+                    //         445,
+                    //         460,
+                    //         450,
+                    //         478,
+                    //         484,
+                    //       ],
+                    //       // data:
+                    //     },
+                    //   ],
+                    // }}
                     options={dashboard24HoursPerformanceChart.options}
                     width={400}
                     height={100}
@@ -216,60 +376,6 @@ class Dashboard extends React.Component {
               </Card>
             </Col>
           </Row>
-          {/* <Row>
-            <Col md="4">
-              <Card>
-                <CardHeader>
-                  <CardTitle tag="h5">Email Statistics</CardTitle>
-                  <p className="card-category">Last Campaign Performance</p>
-                </CardHeader>
-                <CardBody>
-                  <Pie
-                    data={dashboardEmailStatisticsChart.data}
-                    options={dashboardEmailStatisticsChart.options}
-                  />
-                </CardBody>
-                <CardFooter>
-                  <div className="legend">
-                    <i className="fa fa-circle text-primary" /> Opened{" "}
-                    <i className="fa fa-circle text-warning" /> Read{" "}
-                    <i className="fa fa-circle text-danger" /> Deleted{" "}
-                    <i className="fa fa-circle text-gray" /> Unopened
-                  </div>
-                  <hr />
-                  <div className="stats">
-                    <i className="fa fa-calendar" /> Number of emails sent
-                  </div>
-                </CardFooter>
-              </Card>
-            </Col>
-            <Col md="8">
-              <Card className="card-chart">
-                <CardHeader>
-                  <CardTitle tag="h5">NASDAQ: AAPL</CardTitle>
-                  <p className="card-category">Line Chart with Points</p>
-                </CardHeader>
-                <CardBody>
-                  <Line
-                    data={dashboardNASDAQChart.data}
-                    options={dashboardNASDAQChart.options}
-                    width={400}
-                    height={100}
-                  />
-                </CardBody>
-                <CardFooter>
-                  <div className="chart-legend">
-                    <i className="fa fa-circle text-info" /> Tesla Model S{" "}
-                    <i className="fa fa-circle text-warning" /> BMW 5 Series
-                  </div>
-                  <hr />
-                  <div className="card-stats">
-                    <i className="fa fa-check" /> Data information certified
-                  </div>
-                </CardFooter>
-              </Card>
-            </Col>
-          </Row> */}
         </div>
       </>
     );
