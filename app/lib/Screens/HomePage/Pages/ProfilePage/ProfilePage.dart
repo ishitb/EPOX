@@ -119,6 +119,8 @@ class _ProfilePageState extends State<ProfilePage>
                                           time: submission['time'],
                                           pci: submission['pci'],
                                           status: submission['status'],
+                                          imageURL: submission['imageURL'],
+                                          comments: submission['comments'],
                                         );
                                       }).toList(),
                                       options: CarouselOptions(

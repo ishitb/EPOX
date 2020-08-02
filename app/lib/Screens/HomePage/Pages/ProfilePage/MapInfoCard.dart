@@ -9,7 +9,8 @@ class MapInfoCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        width: 345,
+        // width: 345,
+        // width: MediaQuery.of(context).size.width,
         height: 70,
         padding: EdgeInsets.symmetric(
           horizontal: 10,
