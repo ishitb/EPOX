@@ -76,11 +76,6 @@ class Tables extends React.Component {
 
   componentDidMount() {
     this.updateData();
-pre    // this.state.submissions.sort((a, b) =>
-    //   a.date > b.date ? 1 : b.date > a.date ? -1 : 0
-    // );
-    // objs.sort((a,b) => (a.last_nom > b.last_nom) ? 1 : ((b.last_nom > a.last_nom) ? -1 : 0));
-    // console.log(submissions);
   }
 
   render() {
@@ -144,6 +139,7 @@ pre    // this.state.submissions.sort((a, b) =>
                         <th>Name</th>
                         <th>Date</th>
                         <th>Time</th>
+                        <th>Address</th>
                         <th>PCI</th>
                         <th>Status</th>
                         <th className="text-left">Preview</th>
@@ -157,6 +153,7 @@ pre    // this.state.submissions.sort((a, b) =>
                                 <td>{sub.username}</td>
                                 <td>{sub.date}</td>
                                 <td>{sub.time}</td>
+                                <td>{sub.location}</td>
                                 {/* <td>{sub.pci}</td> */}
                                 <td>{Math.round(Math.random() * 100)}</td>
                                 <td style={{ width: "20%" }}>
@@ -184,6 +181,7 @@ pre    // this.state.submissions.sort((a, b) =>
                                 <td>{sub.username}</td>
                                 <td>{sub.date}</td>
                                 <td>{sub.time}</td>
+                                <td>{sub.location}</td>
                                 <td>{Math.round(Math.random() * 100)}</td>
                                 <td style={{ width: "20%" }}>
                                   <StatusSelector
