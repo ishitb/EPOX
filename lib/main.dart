@@ -19,10 +19,6 @@ Future<void> main() async {
     print(e);
   }
 
-  String currentUserID;
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-  await _auth.currentUser().then((value) => currentUserID = value.uid);
-
   runApp(
     MultiProvider(
       providers: [

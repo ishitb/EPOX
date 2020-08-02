@@ -1,7 +1,10 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:epox_flutter/Services/Authentication/UserModel.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:google_maps_webservice/places.dart';
 import 'package:http/http.dart' as http;
 
 import 'SubmissionModel.dart';
@@ -39,7 +42,12 @@ class SubmissionProvider {
       userEmail,
       username,
     );
-    print(newSubmissionData);
+
+    List<Placemark> placemark =
+        await Geolocator().placemarkFromCoordinates(latitude, longitude);
+    newSubmissionData['location'] =
+        "${placemark[0].name}, ${placemark[0].subLocality} - ${placemark[0].postalCode}, ${placemark[0].locality}, ${placemark[0].administrativeArea}";
+
     DocumentReference submissionRef = await submissionCollection.add(
       newSubmissionData,
     );
@@ -56,17 +64,18 @@ class SubmissionProvider {
   Future<void> updateUserInfo(
     String uid,
     DocumentReference submissionID,
-    Map userData,
+    UserDataModel userData,
   ) async {
-    userData['noOfSubmissions']++;
-    userData['submissions'].add(submissionID);
     userCollection
         .document(
-          uid,
-        )
+      uid,
+    )
         .updateData(
-          userData,
-        );
+      {
+        'noOfSubmissions': userData.noOfSubmissions + 1,
+        'submissions': userData.submissions + [submissionID],
+      },
+    );
   }
 
   Future<String> _uploadImage(File image, String reportID) async {
@@ -109,10 +118,15 @@ class SubmissionProvider {
   SubmissionProvider({this.userReportedSubmissions});
 
   List<Map> _getUserSubmissions(QuerySnapshot snapshot) {
-    return snapshot.documents.map((submission) {
-      if (!userReportedSubmissions.contains(submission.documentID)) {
-        return null;
+    List retrievedUserSubmissions = List();
+
+    for (var doc in snapshot.documents) {
+      if (userReportedSubmissions.contains(doc.documentID)) {
+        retrievedUserSubmissions.add(doc);
       }
+    }
+
+    return retrievedUserSubmissions.map((submission) {
       return {
         'latitude': submission.data['latitude'],
         'longitude': submission.data['longitude'],
