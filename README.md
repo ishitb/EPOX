@@ -20,6 +20,8 @@ An app with a very intuitive user interface so than anyone is able to use it to 
 * Run **flutter pub get** to install the flutter libraries used in the project.
 * Run **flutter run** to start the application on you connected device.
 
+![](https://github.com/ishitb/NC_SVCE_MK199_EPOX/blob/master/app/ui.gif)
+
 ### Admin Dashboard
 A web browser based admin dashboard which would make it easier for the authorities to keep a record of the location of the damages on roads and the status of the complaint
 
