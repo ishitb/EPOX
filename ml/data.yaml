@@ -1,0 +1,5 @@
+train: /content/images/train
+val: /content/images/test
+
+nc: 8
+names: ["D00", "D01", "D10", "D11", "D20", "D40", "D43", "D44"]
