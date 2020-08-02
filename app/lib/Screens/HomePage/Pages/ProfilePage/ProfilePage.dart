@@ -1,3 +1,4 @@
+import 'package:epox_flutter/Screens/HomePage/Pages/ProfilePage/SubmissionInfoPage.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -105,28 +106,27 @@ class _ProfilePageState extends State<ProfilePage> {
                                             AlwaysStoppedAnimation<Color>(Blue),
                                       ),
                                     )
-                                  : GestureDetector(
-                                      onTap: () {},
-                                      child: CarouselSlider(
-                                        items: submissionSnapshot.data
-                                            .map((submission) {
-                                          return MapCard(
-                                            longitude: submission['longitude'],
-                                            latitude: submission['latitude'],
-                                            date: submission['date'],
-                                            location: 'Jasola Vihar',
-                                          );
-                                        }).toList(),
-                                        options: CarouselOptions(
-                                          height: 300,
-                                          // aspectRatio: 16 / 9,
-                                          viewportFraction: 0.8,
-                                          initialPage: 0,
-                                          enableInfiniteScroll: false,
-                                          reverse: false,
-                                          enlargeCenterPage: true,
-                                          scrollDirection: Axis.horizontal,
-                                        ),
+                                  : CarouselSlider(
+                                      items: submissionSnapshot.data
+                                          .map((submission) {
+                                        return MapCard(
+                                          longitude: submission['longitude'],
+                                          latitude: submission['latitude'],
+                                          date: submission['date'],
+                                          location: submission['location'] ??
+                                              'Jasola Vihar',
+                                          time: submission['time'],
+                                        );
+                                      }).toList(),
+                                      options: CarouselOptions(
+                                        height: 300,
+                                        // aspectRatio: 16 / 9,
+                                        viewportFraction: 0.8,
+                                        initialPage: 0,
+                                        enableInfiniteScroll: false,
+                                        reverse: false,
+                                        enlargeCenterPage: true,
+                                        scrollDirection: Axis.horizontal,
                                       ),
                                     );
                             }),

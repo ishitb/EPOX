@@ -1,4 +1,5 @@
 import 'package:epox_flutter/Screens/HomePage/Pages/ProfilePage/MapInfoCard.dart';
+import 'package:epox_flutter/Screens/HomePage/Pages/ProfilePage/SubmissionInfoPage.dart';
 import 'package:flutter/material.dart';
 
 import 'package:epox_flutter/Shared/Colors.dart';
@@ -83,6 +84,16 @@ class _MapCardState extends State<MapCard> {
                       splashColor: Orange,
                       onTap: () async {
                         FocusScope.of(context).unfocus();
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) {
+                          return SubmissionInfoPage(
+                            latitude: widget.latitude,
+                            longitude: widget.longitude,
+                            location: widget.location,
+                            date: widget.date,
+                            time: widget.time,
+                          );
+                        }));
                       },
                       // child: Ink(
                       //     // height: _height / 3.5,
