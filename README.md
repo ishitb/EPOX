@@ -35,3 +35,5 @@ A web browser based admin dashboard which would make it easier for the authoriti
 1. Profit
 
 Note: The application will boot in your default browser, in the last active window, by default on localhost:3000 
+
+![](https://github.com/ishitb/NC_SVCE_MK199_EPOX/blob/master/frontend/admin_panel_gif-min.gif)
