@@ -1,36 +1,8 @@
-import firebaseDb from "../Firebase";
-
-async function getData() {
-  let promise = firebaseDb
-    .collection("chartData")
-    .doc("cd")
-    .get()
-    .then((snapshot) => {
-      console.log("snapshot is ", snapshot.data());
-      return snapshot.data();
-    });
-
-  let data = await promise;
-  console.log("internal data is", data);
-  let totalData = Object.keys(data).map((val) => data[val]["total"]);
-  let labels = Object.keys(data).map((val) => data[val]["month"]);
-  let allData = {
-    totalData,
-    labels,
-  };
-  return allData;
-  // console.log("promise is ", data);
-}
-
-let data;
-
-async function setData() {
-  data = await getData();
-  console.log(data);
-  // console.log("data is ", data.totalData, data.labels);
-}
 // const labels = Object.keys(getChartData()).map((val) => val.month);
-setData();
+import { chartDataFetch } from "./chartData";
+
+let chartData;
+chartDataFetch();
 
 const dashboard24HoursPerformanceChart = {
   data: (canvas) => {
@@ -73,7 +45,7 @@ const dashboard24HoursPerformanceChart = {
           pointHoverRadius: 0,
           borderWidth: 3,
           data: [370, 394, 415, 409, 425, 445, 460, 450, 478, 484],
-          // data: data.totalData,
+          // data: 
         },
       ],
     };
@@ -236,6 +208,7 @@ export {
   dashboard24HoursPerformanceChart,
   dashboardEmailStatisticsChart,
   dashboardNASDAQChart,
+  chartData,
 };
 
 // module.exports = {
