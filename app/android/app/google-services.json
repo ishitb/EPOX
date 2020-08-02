@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "531451556931",
+    "firebase_url": "https://sihproject-epox.firebaseio.com",
+    "project_id": "sihproject-epox",
+    "storage_bucket": "sihproject-epox.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:531451556931:android:09c552317b5585dbcd90f6",
+        "android_client_info": {
+          "package_name": "com.example.epox_flutter"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "531451556931-rs7hgimsklljgfknqrdqmok5m220s842.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDhOdU8iATVuvmbjzetHpdZ1xmi7jL8GKI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "531451556931-rs7hgimsklljgfknqrdqmok5m220s842.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
