@@ -116,6 +116,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                           location: submission['location'] ??
                                               'Jasola Vihar',
                                           time: submission['time'],
+                                          pci: submission['pci'],
                                         );
                                       }).toList(),
                                       options: CarouselOptions(

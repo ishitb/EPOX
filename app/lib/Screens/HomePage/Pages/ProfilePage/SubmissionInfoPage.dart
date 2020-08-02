@@ -5,7 +5,7 @@ import 'package:epox_flutter/Shared/Colors.dart';
 
 class SubmissionInfoPage extends StatefulWidget {
   final String location, date, time;
-  final double latitude, longitude;
+  final double latitude, longitude, pci;
 
   SubmissionInfoPage(
       {Key key,
@@ -13,7 +13,8 @@ class SubmissionInfoPage extends StatefulWidget {
       this.longitude,
       this.location,
       this.date,
-      this.time})
+      this.time,
+      this.pci})
       : super(key: key);
 
   @override
@@ -36,7 +37,7 @@ class _SubmissionInfoPageState extends State<SubmissionInfoPage> {
   void initState() {
     setCustomMapPin();
 
-    Future.delayed(Duration(milliseconds: 700)).then((value) {
+    Future.delayed(Duration(milliseconds: 1000)).then((value) {
       setState(() {
         screenLoaded = true;
       });
@@ -51,8 +52,7 @@ class _SubmissionInfoPageState extends State<SubmissionInfoPage> {
       backgroundColor: DarkBlue,
       body: Column(
         children: [
-          AnimatedContainer(
-            duration: Duration(milliseconds: 400),
+          Container(
             decoration: BoxDecoration(
               border: Border(
                 bottom: BorderSide(
@@ -61,8 +61,7 @@ class _SubmissionInfoPageState extends State<SubmissionInfoPage> {
                 ),
               ),
             ),
-            height:
-                screenLoaded ? MediaQuery.of(context).size.height / 2.5 : 0.0,
+            height: MediaQuery.of(context).size.height / 2.5,
             child: GoogleMap(
               initialCameraPosition: CameraPosition(
                 target: LatLng(widget.latitude, widget.longitude),
@@ -182,6 +181,113 @@ class _SubmissionInfoPageState extends State<SubmissionInfoPage> {
                   style: TextStyle(
                     color: Blue,
                     fontSize: 24,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          SizedBox(
+            height: 10.0,
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 30.0,
+              vertical: 10.0,
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                AnimatedContainer(
+                  duration: Duration(milliseconds: 500),
+                  padding: EdgeInsets.all(15.0),
+                  decoration: BoxDecoration(
+                    color: DarkBlue,
+                    boxShadow: [
+                      BoxShadow(
+                        color: DarkGrey,
+                        blurRadius: screenLoaded ? 10.0 : 0.0,
+                        spreadRadius: screenLoaded ? 5.0 : 0.0,
+                      ),
+                    ],
+                  ),
+                  height: 150,
+                  width: 150,
+                  child: Stack(
+                    children: [
+                      SizedBox(
+                        height: 125,
+                        width: 125,
+                        child: CircularProgressIndicator(
+                          value: 1 - widget.pci / 100,
+                          backgroundColor: DarkGrey,
+                          strokeWidth: 2.5,
+                          valueColor: AlwaysStoppedAnimation<Color>(
+                            widget.pci < 20
+                                ? Colors.red[900]
+                                : widget.pci < 40
+                                    ? Orange
+                                    : widget.pci < 60
+                                        ? Colors.yellow[700]
+                                        : widget.pci < 80
+                                            ? Colors.green[300]
+                                            : Colors.green[800],
+                          ),
+                        ),
+                      ),
+                      Align(
+                        alignment: Alignment.center,
+                        child: Text(
+                          "Severity".toUpperCase(),
+                          style: TextStyle(
+                            color: LightGrey,
+                            fontSize: 22.0,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                AnimatedContainer(
+                  duration: Duration(milliseconds: 500),
+                  padding: EdgeInsets.all(15.0),
+                  decoration: BoxDecoration(
+                    color: DarkBlue,
+                    boxShadow: [
+                      BoxShadow(
+                        color: DarkGrey,
+                        blurRadius: screenLoaded ? 10.0 : 0.0,
+                        spreadRadius: screenLoaded ? 5.0 : 0.0,
+                      ),
+                    ],
+                  ),
+                  height: 150,
+                  width: 150,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Icon(
+                            Icons.bug_report,
+                            color: Orange,
+                            size: 30.0,
+                          ),
+                          Text(
+                            "Reported",
+                            style: TextStyle(
+                              color: OffWhite,
+                              fontSize: 22.0,
+                            ),
+                          ),
+                        ],
+                      ),
+                      Text(
+                        "Status of Report",
+                        style: TextStyle(color: Blue, fontSize: 18.0),
+                      ),
+                    ],
                   ),
                 ),
               ],

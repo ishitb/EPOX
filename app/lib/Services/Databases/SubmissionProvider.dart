@@ -110,7 +110,7 @@ class SubmissionProvider {
         'comments': submission.data['comments'],
         'location': submission.data['location'],
         'imageURL': submission.data['imageURL'],
-        'pci': submission.data['pci'],
+        'pci': submission.data['pci'].toDouble(),
       };
     }).toList();
   }
@@ -136,7 +136,7 @@ class SubmissionProvider {
         'comments': submission.data['comments'],
         'location': submission.data['location'],
         'imageURL': submission.data['imageURL'],
-        'pci': submission.data['pci'],
+        'pci': submission.data['pci'].toDouble(),
       };
     }).toList();
   }
