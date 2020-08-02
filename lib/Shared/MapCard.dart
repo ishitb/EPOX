@@ -8,7 +8,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 class MapCard extends StatefulWidget {
   final double longitude, latitude, pci;
   final int status;
-  final String imageURL, location, date, time;
+  final String imageURL, location, date, comments, time;
 
   MapCard({
     Key key,
@@ -20,6 +20,7 @@ class MapCard extends StatefulWidget {
     this.location,
     this.date,
     this.time,
+    this.comments,
   }) : super(key: key);
 
   @override
@@ -92,6 +93,10 @@ class _MapCardState extends State<MapCard> {
                             location: widget.location,
                             date: widget.date,
                             time: widget.time,
+                            pci: 100.0 - widget.pci,
+                            status: widget.status,
+                            imageURL: widget.imageURL,
+                            comments: widget.comments,
                           );
                         }));
                       },
@@ -104,9 +109,8 @@ class _MapCardState extends State<MapCard> {
                 ],
               ),
             ),
-            Positioned(
-              bottom: 0,
-              left: 0,
+            Align(
+              alignment: Alignment.bottomCenter,
               child: MapInfoCard(
                 date: widget.date,
                 location: widget.location,

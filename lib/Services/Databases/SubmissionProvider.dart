@@ -104,13 +104,13 @@ class SubmissionProvider {
       return {
         'latitude': submission.data['latitude'],
         'longitude': submission.data['longitude'],
-        'status': submission.data['status'],
+        'status': submission.data['status'].toInt(),
         'date': submission.data['date'],
         'time': submission.data['time'],
         'comments': submission.data['comments'],
         'location': submission.data['location'],
         'imageURL': submission.data['imageURL'],
-        'pci': submission.data['pci'],
+        'pci': submission.data['pci'].toDouble(),
       };
     }).toList();
   }
@@ -130,13 +130,13 @@ class SubmissionProvider {
       return {
         'latitude': submission.data['latitude'],
         'longitude': submission.data['longitude'],
-        'status': submission.data['status'],
+        'status': submission.data['status'].toInt(),
         'date': submission.data['date'],
         'time': submission.data['time'],
         'comments': submission.data['comments'],
         'location': submission.data['location'],
         'imageURL': submission.data['imageURL'],
-        'pci': submission.data['pci'],
+        'pci': submission.data['pci'].toDouble(),
       };
     }).toList();
   }
