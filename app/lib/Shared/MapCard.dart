@@ -92,7 +92,8 @@ class _MapCardState extends State<MapCard> {
                             location: widget.location,
                             date: widget.date,
                             time: widget.time,
-                            pci: widget.pci,
+                            pci: 100.0 - widget.pci,
+                            status: widget.status,
                           );
                         }));
                       },

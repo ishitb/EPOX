@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import 'package:epox_flutter/Shared/Colors.dart';
+import 'package:epox_flutter/Shared/DelayedAnimation.dart';
 
 class SubmissionInfoPage extends StatefulWidget {
   final String location, date, time;
@@ -27,7 +27,7 @@ class SubmissionInfoPage extends StatefulWidget {
 class _SubmissionInfoPageState extends State<SubmissionInfoPage>
     with SingleTickerProviderStateMixin {
   BitmapDescriptor markerIcon;
-  bool screenLoaded = false;
+  bool screenLoaded = false, severityLoader = false;
 
   void setCustomMapPin() async {
     BitmapDescriptor icon = await BitmapDescriptor.fromAssetImage(
@@ -37,6 +37,26 @@ class _SubmissionInfoPageState extends State<SubmissionInfoPage>
     });
   }
 
+  // Status Map
+  List statusValue = [
+    {
+      'status': "Reported",
+      'color': Colors.red[900],
+    },
+    {
+      'status': "Working",
+      'color': Orange,
+    },
+    {
+      'status': "Resolved",
+      'color': Colors.yellow[700],
+    },
+    {
+      'status': "Spam",
+      'color': Colors.green[800],
+    },
+  ];
+
   // Animation Stuff
   AnimationController _animationController;
   Animation _animation;
@@ -44,12 +64,6 @@ class _SubmissionInfoPageState extends State<SubmissionInfoPage>
   @override
   void initState() {
     setCustomMapPin();
-
-    Future.delayed(Duration(milliseconds: 800)).then((value) {
-      setState(() {
-        screenLoaded = true;
-      });
-    });
 
     _animationController = AnimationController(
         duration: Duration(milliseconds: 1000), vsync: this);
@@ -151,228 +165,297 @@ class _SubmissionInfoPageState extends State<SubmissionInfoPage>
           SizedBox(
             height: 15.0,
           ),
-          AnimatedContainer(
-            duration: Duration(milliseconds: 500),
-            padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
-            margin: EdgeInsets.symmetric(horizontal: 30.0, vertical: 10.0),
-            decoration: BoxDecoration(
-                color: DarkBlue,
-                boxShadow: [
-                  BoxShadow(
-                    color: DarkGrey,
-                    blurRadius: screenLoaded ? 10.0 : 0.0,
-                    spreadRadius: screenLoaded ? 5.0 : 0.0,
-                  ),
-                ],
-                border: Border.all(
-                  color: Orange,
-                  width: 2.0,
-                )),
-            child: Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      children: [
-                        Icon(
-                          Icons.calendar_today,
-                          size: 30,
-                          color: Orange,
-                        ),
-                        SizedBox(
-                          width: 10.0,
-                        ),
-                        Text(
-                          widget.date,
-                          style: TextStyle(
-                            fontSize: 20,
-                            color: OffWhite,
-                          ),
-                        )
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        Text(
-                          widget.time,
-                          style: TextStyle(
-                            fontSize: 20,
-                            color: OffWhite,
-                          ),
-                        ),
-                        SizedBox(
-                          width: 10.0,
-                        ),
-                        Icon(
-                          Icons.access_time,
-                          size: 30,
-                          color: Orange,
-                        )
-                      ],
-                    ),
-                  ],
-                ),
-                Divider(
-                  height: 30,
-                  color: Grey,
-                ),
-                Text(
-                  "Reported on",
-                  style: TextStyle(
-                    color: Blue,
-                    fontSize: 24,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          SizedBox(
-            height: 10.0,
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 30.0,
-              vertical: 10.0,
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                AnimatedContainer(
-                  padding: EdgeInsets.all(15.0),
+          Column(
+            children: [
+              DelayedAnimation(
+                delay: 600,
+                child: AnimatedContainer(
                   duration: Duration(milliseconds: 500),
+                  padding:
+                      EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+                  margin:
+                      EdgeInsets.symmetric(horizontal: 30.0, vertical: 10.0),
                   decoration: BoxDecoration(
                     color: DarkBlue,
                     boxShadow: [
                       BoxShadow(
-                        color: DarkGrey,
+                        color: Black,
                         blurRadius: screenLoaded ? 10.0 : 0.0,
-                        spreadRadius: screenLoaded ? 5.0 : 0.0,
+                        spreadRadius: screenLoaded ? 3.5 : 0.0,
+                      ),
+                    ],
+                    border: Border.all(
+                      color: Orange,
+                      width: 2.0,
+                    ),
+                  ),
+                  child: Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            children: [
+                              Icon(
+                                Icons.calendar_today,
+                                size: 30,
+                                color: Orange,
+                              ),
+                              SizedBox(
+                                width: 10.0,
+                              ),
+                              Text(
+                                widget.date,
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  color: OffWhite,
+                                ),
+                              )
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              Text(
+                                widget.time,
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  color: OffWhite,
+                                ),
+                              ),
+                              SizedBox(
+                                width: 10.0,
+                              ),
+                              Icon(
+                                Icons.access_time,
+                                size: 30,
+                                color: Orange,
+                              )
+                            ],
+                          ),
+                        ],
+                      ),
+                      Divider(
+                        height: 30,
+                        color: Grey,
+                      ),
+                      Text(
+                        "Reported on",
+                        style: TextStyle(
+                          color: Blue,
+                          fontSize: 24,
+                        ),
                       ),
                     ],
                   ),
-                  height: MediaQuery.of(context).size.width / 2.5,
-                  width: MediaQuery.of(context).size.width / 2.5,
-                  child: Column(
+                ),
+                onEnd: () {
+                  setState(() {
+                    screenLoaded = true;
+                  });
+                },
+              ),
+              SizedBox(
+                height: 10.0,
+              ),
+              DelayedAnimation(
+                delay: 800,
+                onEnd: () {
+                  setState(() {
+                    severityLoader = true;
+                  });
+                },
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 30.0,
+                    vertical: 10.0,
+                  ),
+                  child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
-                        "Severity".toUpperCase(),
-                        style: TextStyle(
-                          color: Blue,
-                          fontSize: 24.0,
-                          fontWeight: FontWeight.w500,
+                      AnimatedContainer(
+                        padding: EdgeInsets.all(15.0),
+                        duration: Duration(milliseconds: 500),
+                        decoration: BoxDecoration(
+                          color: DarkBlue,
+                          boxShadow: [
+                            BoxShadow(
+                              color: Black,
+                              blurRadius: severityLoader ? 10.0 : 0.0,
+                              spreadRadius: severityLoader ? 3.5 : 0.0,
+                            ),
+                          ],
+                          border: Border.all(
+                            color: Orange,
+                            width: 2.0,
+                          ),
                         ),
-                      ),
-                      SizedBox(
-                        height: MediaQuery.of(context).size.width / 4,
-                        width: MediaQuery.of(context).size.width / 4,
-                        child: Stack(
+                        height: MediaQuery.of(context).size.width / 2.5,
+                        width: MediaQuery.of(context).size.width / 2.5,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
+                            Text(
+                              "Severity".toUpperCase(),
+                              style: TextStyle(
+                                color: Blue,
+                                fontSize: 24.0,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
                             SizedBox(
                               height: MediaQuery.of(context).size.width / 4,
                               width: MediaQuery.of(context).size.width / 4,
-                              child: CircularProgressIndicator(
-                                value: widget.pci * _animation.value / 100,
-                                backgroundColor: DarkGrey,
-                                strokeWidth: 4.5,
-                                valueColor: AlwaysStoppedAnimation<Color>(
-                                  widget.pci * _animation.value < 20
-                                      ? Colors.red[900]
-                                      : widget.pci * _animation.value < 40
-                                          ? Orange
-                                          : widget.pci * _animation.value < 60
-                                              ? Colors.yellow[700]
-                                              : widget.pci * _animation.value <
-                                                      80
-                                                  ? Colors.green[300]
-                                                  : Colors.green[800],
-                                ),
+                              child: Stack(
+                                children: [
+                                  SizedBox(
+                                    height:
+                                        MediaQuery.of(context).size.width / 4,
+                                    width:
+                                        MediaQuery.of(context).size.width / 4,
+                                    child: CircularProgressIndicator(
+                                      value:
+                                          widget.pci * _animation.value / 100,
+                                      backgroundColor: DarkGrey,
+                                      strokeWidth: 4.5,
+                                      valueColor: AlwaysStoppedAnimation<Color>(
+                                        widget.pci * _animation.value < 20
+                                            ? Colors.red[900]
+                                            : widget.pci * _animation.value < 40
+                                                ? Orange
+                                                : widget.pci *
+                                                            _animation.value <
+                                                        60
+                                                    ? Colors.yellow[700]
+                                                    : widget.pci *
+                                                                _animation
+                                                                    .value <
+                                                            80
+                                                        ? Colors.green[300]
+                                                        : Colors.green[800],
+                                      ),
+                                    ),
+                                  ),
+                                  Center(
+                                    child: Text(
+                                      "${(widget.pci * _animation.value).toStringAsFixed(2)}%",
+                                      style: TextStyle(
+                                        fontSize: 24.0,
+                                        color: widget.pci * _animation.value <
+                                                20
+                                            ? Colors.red[900]
+                                            : widget.pci * _animation.value < 40
+                                                ? Orange
+                                                : widget.pci *
+                                                            _animation.value <
+                                                        60
+                                                    ? Colors.yellow[700]
+                                                    : widget.pci *
+                                                                _animation
+                                                                    .value <
+                                                            80
+                                                        ? Colors.green[300]
+                                                        : Colors.green[800],
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
-                            Center(
-                              child: Text(
-                                "${(widget.pci * _animation.value).toStringAsFixed(2)}%",
-                                style: TextStyle(
-                                  fontSize: 24.0,
-                                  color: widget.pci * _animation.value < 20
-                                      ? Colors.red[900]
-                                      : widget.pci * _animation.value < 40
-                                          ? Orange
-                                          : widget.pci * _animation.value < 60
-                                              ? Colors.yellow[700]
-                                              : widget.pci * _animation.value <
-                                                      80
-                                                  ? Colors.green[300]
-                                                  : Colors.green[800],
-                                ),
+                          ],
+                        ),
+                        onEnd: () {
+                          _animationController.forward();
+                        },
+                      ),
+                      AnimatedContainer(
+                        duration: Duration(milliseconds: 500),
+                        padding: EdgeInsets.all(20.0),
+                        decoration: BoxDecoration(
+                          color: DarkBlue,
+                          boxShadow: [
+                            BoxShadow(
+                              color: Black,
+                              blurRadius: severityLoader ? 10.0 : 0.0,
+                              spreadRadius: severityLoader ? 3.5 : 0.0,
+                            ),
+                          ],
+                          border: Border.all(
+                            color: Orange,
+                            width: 2.0,
+                          ),
+                        ),
+                        height: MediaQuery.of(context).size.width / 2.5,
+                        width: MediaQuery.of(context).size.width / 2.5,
+                        child: Stack(
+                          children: [
+                            Align(
+                              alignment: Alignment.topLeft,
+                              child: Icon(
+                                // FontAwesomeIcons.resolving,
+                                Icons.new_releases,
+                                size: 40.0,
+                                color: statusValue[widget.status]['color'],
                               ),
+                            ),
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  statusValue[widget.status]['status'],
+                                  style: TextStyle(
+                                    color: statusValue[widget.status]['color'],
+                                    fontSize: 28.0,
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 10.0,
+                                ),
+                                Text(
+                                  "Status of Report",
+                                  style: TextStyle(
+                                    color: Blue,
+                                    fontSize: 20.0,
+                                  ),
+                                ),
+                              ],
                             ),
                           ],
                         ),
                       ),
                     ],
                   ),
-                  onEnd: () {
-                    _animationController.forward();
-                  },
                 ),
-                AnimatedContainer(
+              ),
+              SizedBox(
+                height: 20.0,
+              ),
+              DelayedAnimation(
+                delay: 1000,
+                child: AnimatedContainer(
                   duration: Duration(milliseconds: 500),
-                  padding: EdgeInsets.all(15.0),
+                  padding:
+                      EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+                  margin:
+                      EdgeInsets.symmetric(horizontal: 30.0, vertical: 10.0),
                   decoration: BoxDecoration(
                     color: DarkBlue,
                     boxShadow: [
                       BoxShadow(
-                        color: DarkGrey,
+                        color: Black,
                         blurRadius: screenLoaded ? 10.0 : 0.0,
-                        spreadRadius: screenLoaded ? 5.0 : 0.0,
+                        spreadRadius: screenLoaded ? 3.5 : 0.0,
                       ),
                     ],
-                  ),
-                  height: MediaQuery.of(context).size.width / 2.5,
-                  width: MediaQuery.of(context).size.width / 2.5,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Align(
-                        alignment: Alignment.topLeft,
-                        child: Icon(
-                          // FontAwesomeIcons.resolving,
-                          Icons.new_releases,
-                          size: 40.0,
-                        ),
-                      ),
-                      Text(
-                        "Status of Report",
-                        style: TextStyle(
-                          color: Blue,
-                          fontSize: 18.0,
-                        ),
-                      ),
-                      SizedBox(
-                        height: 10.0,
-                      ),
-                      Text(
-                        "Reported",
-                        style: TextStyle(
-                          color: widget.status == 0
-                              ? Colors.red[900]
-                              : widget.status == 1
-                                  ? Orange
-                                  : widget.status == 2
-                                      ? Colors.yellow[700]
-                                      : Colors.green[800],
-                          fontSize: 26.0,
-                        ),
-                      ),
-                    ],
+                    border: Border.all(
+                      color: Orange,
+                      width: 2.0,
+                    ),
                   ),
                 ),
-              ],
-            ),
-          ),
+              ),
+            ],
+          )
         ],
       ),
     );
