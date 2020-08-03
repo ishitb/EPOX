@@ -16,7 +16,9 @@ import 'package:epox_flutter/Shared/Colors.dart';
 import 'package:epox_flutter/Shared/MapCard.dart';
 
 class ProfilePage extends StatefulWidget with WidgetsBindingObserver {
-  ProfilePage({Key key}) : super(key: key);
+  final PageController mainPageController;
+
+  ProfilePage({Key key, this.mainPageController}) : super(key: key);
 
   @override
   _ProfilePageState createState() => _ProfilePageState();
@@ -63,7 +65,9 @@ class _ProfilePageState extends State<ProfilePage>
                       name: snapshot.data.name,
                       emailID: snapshot.data.emailID,
                     ),
-                    ProfileAppBar(),
+                    ProfileAppBar(
+                      mainPageController: widget.mainPageController,
+                    ),
                     Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -111,6 +115,9 @@ class _ProfilePageState extends State<ProfilePage>
                                       items: submissionSnapshot.data
                                           .map((submission) {
                                         return MapCard(
+                                          all: false,
+                                          upvotes: submission['upvotes'],
+                                          downvotes: submission['downvotes'],
                                           longitude: submission['longitude'],
                                           latitude: submission['latitude'],
                                           date: submission['date'],

@@ -11,7 +11,7 @@ import 'package:epox_flutter/Shared/DelayedAnimation.dart';
 class SubmissionInfoPage extends StatefulWidget {
   final String location, date, time, imageURL, comments;
   final double latitude, longitude, pci;
-  final int status;
+  final int status, upvotes, downvotes;
 
   SubmissionInfoPage({
     Key key,
@@ -24,6 +24,8 @@ class SubmissionInfoPage extends StatefulWidget {
     this.status,
     this.imageURL,
     this.comments,
+    this.upvotes,
+    this.downvotes,
   }) : super(key: key);
 
   @override
@@ -106,6 +108,9 @@ class _SubmissionInfoPageState extends State<SubmissionInfoPage>
                       });
                     },
                   ),
+                  SizedBox(
+                    height: 15.0,
+                  ),
                   DelayedAnimation(
                     delay: 800,
                     onEnd: () {
@@ -122,8 +127,9 @@ class _SubmissionInfoPageState extends State<SubmissionInfoPage>
                     ),
                   ),
                   // SizedBox(
-                  //   height: 20.0,
-                  // ),
+                  SizedBox(
+                    height: 15.0,
+                  ),
                   DelayedAnimation(
                     delay: 1000,
                     onEnd: () {
@@ -134,35 +140,44 @@ class _SubmissionInfoPageState extends State<SubmissionInfoPage>
                     child: Votes(
                       screenLoaded: screenLoaded,
                       startVoting: startVoting,
+                      upvotes: widget.upvotes,
+                      downvotes: widget.downvotes,
                     ),
                   ),
-                  DelayedAnimation(
-                    delay: 1300,
-                    child: AnimatedContainer(
-                      duration: Duration(milliseconds: 500),
-                      // padding:
-                      //     EdgeInsets.symmetric(horizontal: 15.0, vertical: 10.0),
-                      margin: EdgeInsets.symmetric(
-                          horizontal: 30.0, vertical: 10.0),
-                      decoration: BoxDecoration(
-                        color: DarkBlue,
-                        boxShadow: [
-                          BoxShadow(
-                            color: Black,
-                            blurRadius: screenLoaded ? 10.0 : 0.0,
-                            spreadRadius: screenLoaded ? 3.5 : 0.0,
+                  SizedBox(
+                    height: 15.0,
+                  ),
+                  if (widget.imageURL != null)
+                    DelayedAnimation(
+                      delay: 1300,
+                      child: AnimatedContainer(
+                        duration: Duration(milliseconds: 500),
+                        // padding:
+                        //     EdgeInsets.symmetric(horizontal: 15.0, vertical: 10.0),
+                        margin: EdgeInsets.symmetric(
+                            horizontal: 30.0, vertical: 10.0),
+                        decoration: BoxDecoration(
+                          color: DarkBlue,
+                          boxShadow: [
+                            BoxShadow(
+                              color: Black,
+                              blurRadius: screenLoaded ? 10.0 : 0.0,
+                              spreadRadius: screenLoaded ? 3.5 : 0.0,
+                            ),
+                          ],
+                          border: Border.all(
+                            color: Orange,
+                            width: 2.0,
                           ),
-                        ],
-                        border: Border.all(
-                          color: Orange,
-                          width: 2.0,
+                        ),
+                        child: FadeInImage.assetNetwork(
+                          image: widget.imageURL,
+                          placeholder: 'assets/images/loader.gif',
                         ),
                       ),
-                      child: FadeInImage.assetNetwork(
-                        image: widget.imageURL,
-                        placeholder: 'assets/images/loader.gif',
-                      ),
                     ),
+                  SizedBox(
+                    height: 15.0,
                   ),
                   widget.comments == ""
                       ? Container()
@@ -172,8 +187,12 @@ class _SubmissionInfoPageState extends State<SubmissionInfoPage>
                             duration: Duration(milliseconds: 500),
                             padding: EdgeInsets.symmetric(
                                 horizontal: 15.0, vertical: 10.0),
-                            margin: EdgeInsets.symmetric(
-                                horizontal: 30.0, vertical: 10.0),
+                            margin: EdgeInsets.only(
+                              left: 30.0,
+                              right: 30.0,
+                              top: 10.0,
+                              bottom: 25.0,
+                            ),
                             width: MediaQuery.of(context).size.width,
                             decoration: BoxDecoration(
                               color: DarkBlue,

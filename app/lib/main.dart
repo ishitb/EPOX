@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:camera/camera.dart';
 import 'package:provider/provider.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'Services/Localization/AppLocalizations.dart';
 
@@ -17,6 +17,12 @@ Future<void> main() async {
     cameras = await availableCameras();
   } on CameraException catch (e) {
     print(e);
+  }
+
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+
+  if (!prefs.containsKey('customDocID')) {
+    await prefs.setInt('customDocID', 9999999999);
   }
 
   runApp(
