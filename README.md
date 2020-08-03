@@ -21,8 +21,9 @@ An app with a very intuitive user interface so than anyone is able to use it to 
 * Run **flutter pub get** to install the flutter libraries used in the project.
 * Run **flutter run** to start the application on you connected device.
 
-![](https://github.com/ishitb/NC_SVCE_MK199_EPOX/blob/master/app/ui.gif)  ![](<img src="https://github.com/ishitb/NC_SVCE_MK199_EPOX/blob/master/app/appdemo.gif" width="288" height="640"/>)
+![](https://github.com/ishitb/NC_SVCE_MK199_EPOX/blob/master/app/ui.gif)  
 
+[screenshot 2](https://github.com/ishitb/NC_SVCE_MK199_EPOX/blob/master/app/appdemo.gif)
 ### Dataset Link
 
 > [RoadDamageDataset](https://mycityreport.s3-ap-northeast-1.amazonaws.com/02_RoadDamageDataset/public_data/Japan/RDD2020_data.tar.gz)
@@ -65,6 +66,7 @@ An app with a very intuitive user interface so than anyone is able to use it to 
 
 
 ```
+
 
 ## Admin Dashboard
 A web browser based admin dashboard which would make it easier for the authorities to keep a record of the location of the damages on roads and the status of the complaint
