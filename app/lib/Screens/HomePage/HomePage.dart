@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'package:epox_flutter/Screens/HomePage/Pages/AllSubmissions/AllSubmissions.dart';
 import 'package:epox_flutter/Screens/HomePage/Pages/MainPage/MainPage.dart';
 import 'package:epox_flutter/Screens/HomePage/Pages/ProfilePage/ProfilePage.dart';
 
@@ -25,17 +26,10 @@ class _HomePageState extends State<HomePage> {
               children: [
                 ProfilePage(),
                 MainPage(cameras: widget.cameras),
-                // MapPage(),
+                AllSubmissions(),
               ],
             ),
           ),
-          // SafeArea(
-          //   child: Container(
-          //     height: 50,
-          //     color: OffWhite,
-          //     width: MediaQuery.of(context).size.height,
-          //   ),
-          // ),
         ],
       ),
     );
