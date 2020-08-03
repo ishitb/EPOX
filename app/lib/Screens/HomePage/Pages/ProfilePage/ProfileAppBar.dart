@@ -1,11 +1,18 @@
+import 'package:epox_flutter/Services/Authentication/AuthProvider.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import 'package:epox_flutter/Shared/Colors.dart';
 
 class ProfileAppBar extends StatelessWidget {
+  final PageController mainPageController;
+
+  const ProfileAppBar({Key key, this.mainPageController}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
+    final AuthProvider _auth = AuthProvider();
+
     return SafeArea(
       child: Container(
         height: 70,
@@ -13,7 +20,9 @@ class ProfileAppBar extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             FlatButton.icon(
-              onPressed: () {},
+              onPressed: () {
+                _auth.signOut();
+              },
               icon: FaIcon(
                 Icons.arrow_back,
                 color: OffWhite,
@@ -32,6 +41,11 @@ class ProfileAppBar extends StatelessWidget {
               child: InkWell(
                 onTap: () {
                   print("Back");
+                  mainPageController.animateToPage(
+                    1,
+                    duration: Duration(milliseconds: 400),
+                    curve: Curves.easeIn,
+                  );
                 },
                 child: Row(
                   children: [

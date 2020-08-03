@@ -24,7 +24,9 @@ class _HomePageState extends State<HomePage> {
             child: PageView(
               controller: _pageController,
               children: [
-                ProfilePage(),
+                ProfilePage(
+                  mainPageController: _pageController,
+                ),
                 MainPage(cameras: widget.cameras),
                 AllSubmissions(),
               ],

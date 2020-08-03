@@ -1,3 +1,4 @@
+import 'package:epox_flutter/Screens/HomePage/Pages/AllSubmissions/MapInfo2.dart';
 import 'package:epox_flutter/Screens/HomePage/Pages/ProfilePage/MapInfoCard.dart';
 import 'package:epox_flutter/Screens/HomePage/Pages/ProfilePage/UserSubmissions/SubmissionInfoPage.dart';
 import 'package:flutter/material.dart';
@@ -7,8 +8,10 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class MapCard extends StatefulWidget {
   final double longitude, latitude, pci;
-  final int status;
-  final String imageURL, location, date, comments, time;
+  final int status, upvotes, downvotes;
+  final String imageURL, location, date, comments, time, id, uid;
+  final bool all;
+  final List userUpVoted, userDownVoted;
 
   MapCard({
     Key key,
@@ -21,6 +24,13 @@ class MapCard extends StatefulWidget {
     this.date,
     this.time,
     this.comments,
+    this.all,
+    this.upvotes,
+    this.downvotes,
+    this.userUpVoted,
+    this.id,
+    this.uid,
+    this.userDownVoted,
   }) : super(key: key);
 
   @override
@@ -47,7 +57,8 @@ class _MapCardState extends State<MapCard> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 350,
+      width: 345,
+      height: 300,
       decoration: BoxDecoration(
         border: Border.all(
           color: Blue,
@@ -97,6 +108,8 @@ class _MapCardState extends State<MapCard> {
                             status: widget.status,
                             imageURL: widget.imageURL,
                             comments: widget.comments,
+                            upvotes: widget.upvotes,
+                            downvotes: widget.downvotes,
                           );
                         }));
                       },
@@ -111,10 +124,19 @@ class _MapCardState extends State<MapCard> {
             ),
             Align(
               alignment: Alignment.bottomCenter,
-              child: MapInfoCard(
-                date: widget.date,
-                location: widget.location,
-              ),
+              child: widget.all
+                  ? MapInfoCard2(
+                      date: widget.date,
+                      location: widget.location,
+                      userUpVoted: widget.userUpVoted,
+                      userDownVoted: widget.userDownVoted,
+                      id: widget.id,
+                      uid: widget.uid,
+                    )
+                  : MapInfoCard(
+                      date: widget.date,
+                      location: widget.location,
+                    ),
             )
           ],
         ),
