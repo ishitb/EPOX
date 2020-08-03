@@ -88,11 +88,6 @@ class Tables extends React.Component {
                 <CardHeader>
                   <Grid container justify="space-between">
                     <CardTitle tag="h4">All Users</CardTitle>
-                    {/* <TextField
-                      onChange={this.handleSearchChange}
-                      label="Search by username"
-                      variant="filled"
-                    /> */}
                   </Grid>
                 </CardHeader>
                 <CardBody>

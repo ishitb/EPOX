@@ -41,22 +41,8 @@ const MapWrapper = withScriptjs(
         defaultCenter={{ lat: 20.593684, lng: 78.96288 }}
         defaultOptions={{
           scrollwheel: true,
-          // styles: [mapStyles],
         }}
       >
-        {/* {
-        <MarkerClusterer options={options}>
-          {(clusterer) =>
-            Object.keys(props.markers).map((id) => (
-              <Marker
-                key={createKey(props.markers[id])}
-                position={(props.markers[id].lat, props.markers[id].lng)}
-                clusterer={clusterer}
-              />
-            ))
-          }
-        </MarkerClusterer>
-      } */}
         {props.markers.map((mark) => {
           return (
             <Marker
@@ -84,7 +70,6 @@ const MapWrapper = withScriptjs(
             }}
             onCloseClick={() => setMark(null)}
           >
-            {/* {console.log(selectedMark)} */}
             <div
               style={{
                 width: "150px",

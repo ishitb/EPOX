@@ -45,7 +45,7 @@ const dashboard24HoursPerformanceChart = {
           pointHoverRadius: 0,
           borderWidth: 3,
           data: [370, 394, 415, 409, 425, 445, 460, 450, 478, 484],
-          // data: 
+          // data:
         },
       ],
     };
@@ -210,9 +210,3 @@ export {
   dashboardNASDAQChart,
   chartData,
 };
-
-// module.exports = {
-//   dashboard24HoursPerformanceChart,
-//   dashboardEmailStatisticsChart,
-//   dashboardNASDAQChart,
-// };
