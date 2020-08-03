@@ -89,32 +89,32 @@ class Dashboard extends React.Component {
             // labels: labels,
             labels: labels,
             datasets: [
-              // {
-              //   borderColor: "#6bd098",
-              //   backgroundColor: "#6bd098",
-              //   pointRadius: 0,
-              //   pointHoverRadius: 0,
-              //   borderWidth: 3,
-              //   data: [300, 310, 316, 322, 330, 326, 333, 345, 338, 354, 13, 14],
-              //   // data: total,
-              // },
-              // {
-              //   borderColor: "#f17e5d",
-              //   backgroundColor: "#f17e5d",
-              //   pointRadius: 0,
-              //   pointHoverRadius: 0,
-              //   borderWidth: 3,
-              //   data: [320, 340, 365, 360, 370, 385, 390, 384, 408, 420, 11, 12],
-              //   // data: total,
-              // },
+              {
+                borderColor: "#6bd098",
+                backgroundColor: "#6bd098",
+                pointRadius: 0,
+                pointHoverRadius: 0,
+                borderWidth: 3,
+                data: [300, 310, 316, 322, 330, 326, 333, 345, 338, 354, 365, 354],
+                // data: total,
+              },
+              {
+                borderColor: "#f17e5d",
+                backgroundColor: "#f17e5d",
+                pointRadius: 0,
+                pointHoverRadius: 0,
+                borderWidth: 3,
+                data: [320, 340, 365, 360, 370, 385, 390, 384, 408, 420, 423, 432],
+                // data: total,
+              },
               {
                 borderColor: "#fcc468",
                 backgroundColor: "#fcc468",
                 pointRadius: 0,
                 pointHoverRadius: 0,
                 borderWidth: 3,
-                // data: [370, 394, 415, 409, 425, 445, 460, 450, 478, 484],
-                data: total,
+                data: [370, 394, 415, 409, 425, 445, 460, 450, 478, 484, 501, 511],
+                // data: total,
               },
             ],
           },
@@ -286,8 +286,8 @@ class Dashboard extends React.Component {
                 <CardBody>
                   <Line
                     ref={(reference) => (this.chartRef = reference)}
-                    // data={dashboard24HoursPerformanceChart.data}
-                    data={this.state.stateChartData}
+                    data={dashboard24HoursPerformanceChart.data}
+                    // data={this.state.stateChartData}
                     // data={{
                     //   labels: [
                     //     "Jan",

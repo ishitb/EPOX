@@ -155,7 +155,7 @@ class Tables extends React.Component {
                                 <td>{sub.time}</td>
                                 <td>{sub.location}</td>
                                 {/* <td>{sub.pci}</td> */}
-                                <td>{Math.round(Math.random() * 100)}</td>
+                                <td>{Math.round(sub.pci)}</td>
                                 <td style={{ width: "20%" }}>
                                   <StatusSelector
                                     status={sub.status}
@@ -182,7 +182,7 @@ class Tables extends React.Component {
                                 <td>{sub.date}</td>
                                 <td>{sub.time}</td>
                                 <td>{sub.location}</td>
-                                <td>{Math.round(Math.random() * 100)}</td>
+                                <td>{Math.round(sub.pci)}</td>
                                 <td style={{ width: "20%" }}>
                                   <StatusSelector
                                     status={sub.status}
