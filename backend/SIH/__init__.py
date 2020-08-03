@@ -16,11 +16,7 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 @app.route('/')
 def index():
-    return 'aur bhai'
-
-@app.route('/hmm')
-def index1():
-    return 'tu bata'
+    return 'Working'
 
 def allowed_file(filename):
     return '.' in filename and \
@@ -31,18 +27,17 @@ def upload_file():
     if request.method == 'POST':
         # check if the post request has the file part
         if 'file' not in request.files:
-            return make_response(jsonify({"message":"dukh"}),401)
+            return make_response(jsonify({"message":"no file"}),401)
         file = request.files['file']
         # if user does not select file, browser also
         # submit an empty part without filename
         if file.filename == '':
-            return make_response(jsonify({"message":"bhai file should have a name"}),401)
+            return make_response(jsonify({"message":"file should have a name"}),401)
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
 
             # if(os.path.join(app.config['UPLOAD_FOLDER'],filename)):
             #     return make_response(jsonify({"message":"exist"}),200)
-                
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             try:
                 filePath = app.config['UPLOAD_FOLDER']+"/"+filename
@@ -51,6 +46,7 @@ def upload_file():
                 filename1 = filename[:-4]
                 PCI = getPCI(OUTPUT_FOLDER+filename1+".txt")
                 print(PCI)
+                os.remove(filePath)
             except:
                 return make_response(jsonify({"message:Check again"}))
             return make_response(jsonify({
