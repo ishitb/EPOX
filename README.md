@@ -69,13 +69,15 @@ An app with a very intuitive user interface so than anyone is able to use it to 
 ## Admin Dashboard
 A web browser based admin dashboard which would make it easier for the authorities to keep a record of the location of the damages on roads and the status of the complaint
 
+To see the demo open the frontend folder and read the README
+
 *To run the source code and test the Webapp:-*
 1. Clone the repository to your system
 1. Open Terminal and navigate to **Frontend** Folder
 1. Run **npm install** to install the dependencies
 1. Run **npm start** to start the application
 1. Login with appropriate credentials for the app
-1. ???
+1. Get the data of all roads, their PCI, location, rating, trends and much more on your fingertips
 1. Profit
 
 Note: The application will boot in your default browser, in the last active window, by default on localhost:3000 
