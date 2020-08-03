@@ -5,13 +5,15 @@ import 'package:epox_flutter/Shared/Colors.dart';
 class BottomCard extends StatelessWidget {
   final double height, width;
   final int credibilityScore, noOfSubmissions;
+  final Animation animation;
 
   const BottomCard(
       {Key key,
       this.height,
       this.width,
       this.credibilityScore,
-      this.noOfSubmissions})
+      this.noOfSubmissions,
+      this.animation})
       : super(key: key);
 
   @override
@@ -67,7 +69,10 @@ class BottomCard extends StatelessWidget {
                           ),
                         ),
                         Text(
-                          credibilityScore.toString(),
+                          (credibilityScore.abs() * animation.value)
+                              .floor()
+                              .toInt()
+                              .toString(),
                           style: TextStyle(
                             color: Orange,
                             fontSize: 24.0,
@@ -105,7 +110,10 @@ class BottomCard extends StatelessWidget {
                           ),
                         ),
                         Text(
-                          noOfSubmissions.toString(),
+                          (noOfSubmissions * animation.value)
+                              .floor()
+                              .toInt()
+                              .toString(),
                           style: TextStyle(
                             color: Orange,
                             fontSize: 24.0,

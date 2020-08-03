@@ -7,7 +7,6 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_webservice/places.dart';
 import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
 
 import 'SubmissionModel.dart';
 
@@ -16,6 +15,7 @@ class SubmissionProvider {
       Firestore.instance.collection('submissions');
   final CollectionReference userCollection =
       Firestore.instance.collection("users");
+  CollectionReference dummyCollection = Firestore.instance.collection('dummy');
   final List userReportedSubmissions;
 
   Future<DocumentReference> newSubmission({
@@ -45,8 +45,11 @@ class SubmissionProvider {
       username,
     );
 
-    SharedPreferences sprefs = await SharedPreferences.getInstance();
-    int customSubmitID = sprefs.getInt('customDocID');
+    // Getting Custom ID:
+
+    DocumentReference dummyRef = dummyCollection.document('id');
+    DocumentSnapshot dummySnap = await dummyRef.snapshots().first;
+    int customSubmitID = dummySnap.data['id'];
 
     List<Placemark> placemark =
         await Geolocator().placemarkFromCoordinates(latitude, longitude);
@@ -79,7 +82,11 @@ class SubmissionProvider {
       'pci': imageData[1],
     });
 
-    customSubmitID--;
+    dummyRef.updateData(
+      {
+        'id': --customSubmitID,
+      },
+    );
 
     return submissionRef;
   }
@@ -110,18 +117,18 @@ class SubmissionProvider {
         .onComplete;
     final String imageURL = await snapshot.ref.getDownloadURL();
 
-    // var request = http.MultipartRequest(
-    //     'POST', Uri.parse('http://2fc773642848.ngrok.io//image-upload'));
-    // String fileName = '$reportID.${image.path.toString().split('.').last}';
-    // request.files.add(http.MultipartFile(
-    //     'file', image.readAsBytes().asStream(), image.lengthSync(),
-    //     filename: fileName));
-    // var response = await request.send();
-    // var responseString = await await http.Response.fromStream(response);
-    // double pci = json.decode(responseString.body)['data'][0].toDouble();
+    var request = http.MultipartRequest(
+        'POST', Uri.parse('http://2fc773642848.ngrok.io//image-upload'));
+    String fileName = '$reportID.${image.path.toString().split('.').last}';
+    request.files.add(http.MultipartFile(
+        'file', image.readAsBytes().asStream(), image.lengthSync(),
+        filename: fileName));
+    var response = await request.send();
+    var responseString = await await http.Response.fromStream(response);
+    double pci = json.decode(responseString.body)['data'][0].toDouble();
 
-    // return [imageURL, pci];
-    return [imageURL, 95.60649295226];
+    return [imageURL, pci];
+    // return [imageURL, 95.60649295226];
   }
 
   List<Map> _getAllSubmissions(QuerySnapshot snapshot) {

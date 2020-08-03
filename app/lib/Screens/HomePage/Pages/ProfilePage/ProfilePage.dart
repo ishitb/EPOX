@@ -1,4 +1,5 @@
 import 'package:epox_flutter/Screens/HomePage/Pages/ProfilePage/UserSubmissions/SubmissionInfoPage.dart';
+import 'package:epox_flutter/Shared/DelayedAnimation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -29,12 +30,29 @@ class _ProfilePageState extends State<ProfilePage>
   double longitude = 0, latitude = 0;
   bool loading = false, locationServicesEnabled = true;
 
+  Animation animation;
+  AnimationController animationController;
+
   final AuthProvider _auth = AuthProvider();
 
   @override
   void initState() {
     super.initState();
     // _getCurrentLocation();
+
+    animationController =
+        AnimationController(duration: Duration(milliseconds: 800), vsync: this);
+    animation = Tween<double>(
+      begin: 0.0,
+      end: 1.0,
+    ).animate(CurvedAnimation(
+      parent: animationController,
+      curve: Curves.ease,
+    ));
+
+    animationController.addListener(() {
+      setState(() {});
+    });
   }
 
   @override
@@ -106,9 +124,22 @@ class _ProfilePageState extends State<ProfilePage>
                             builder: (context, submissionSnapshot) {
                               return !submissionSnapshot.hasData
                                   ? Center(
-                                      child: CircularProgressIndicator(
-                                        valueColor:
-                                            AlwaysStoppedAnimation<Color>(Blue),
+                                      child: Column(
+                                        children: [
+                                          Container(
+                                            height: 300,
+                                            width: 300,
+                                            child: Image.asset(
+                                                'undraw_empty_street_sfxm'),
+                                          ),
+                                          Text(
+                                            "Seems pretty empty.",
+                                            style: TextStyle(
+                                              fontSize: 20.0,
+                                              color: OffWhite,
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                     )
                                   : CarouselSlider(
@@ -144,11 +175,17 @@ class _ProfilePageState extends State<ProfilePage>
                             }),
                       ],
                     ),
-                    BottomCard(
-                      width: size.width,
-                      height: size.height,
-                      credibilityScore: snapshot.data.credibilityScore,
-                      noOfSubmissions: snapshot.data.noOfSubmissions,
+                    DelayedAnimation(
+                      onEnd: () {
+                        animationController.forward();
+                      },
+                      child: BottomCard(
+                        width: size.width,
+                        height: size.height,
+                        credibilityScore: snapshot.data.credibilityScore,
+                        noOfSubmissions: snapshot.data.noOfSubmissions,
+                        animation: animation,
+                      ),
                     ),
                   ],
                 ),
