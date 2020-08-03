@@ -21,7 +21,7 @@ An app with a very intuitive user interface so than anyone is able to use it to 
 * Run **flutter pub get** to install the flutter libraries used in the project.
 * Run **flutter run** to start the application on you connected device.
 
-![](https://github.com/ishitb/NC_SVCE_MK199_EPOX/blob/master/app/ui.gif)
+![](https://github.com/ishitb/NC_SVCE_MK199_EPOX/blob/master/app/ui.gif)  ![](<img src="https://github.com/ishitb/NC_SVCE_MK199_EPOX/blob/master/app/appdemo.gif" width="288" height="640"/>)
 
 ### Dataset Link
 
