@@ -5,10 +5,11 @@
 
 ### This repo consists of the code for 
   1. The mobile application
-  2. Admin dashboard
-  3. Machine learning scripts and models
+  2. Backend 
+  3. Admin dashboard
+  4. Machine learning scripts and models
 
-### Mobile Application
+## Mobile Application
 An app with a very intuitive user interface so than anyone is able to use it to report any kind of road damages just by clicking a picture.
 
 *To run the source code and test the app:-*
@@ -22,7 +23,50 @@ An app with a very intuitive user interface so than anyone is able to use it to 
 
 ![](https://github.com/ishitb/NC_SVCE_MK199_EPOX/blob/master/app/ui.gif)
 
-### Admin Dashboard
+### Dataset Link
+
+> [RoadDamageDataset](https://mycityreport.s3-ap-northeast-1.amazonaws.com/02_RoadDamageDataset/public_data/Japan/RDD2020_data.tar.gz)
+
+## Starting The Backend 
+
+### To run the flask backend for the project follow the steps 
+
+  1. Environment Setup : To create a virtual environment and installation of flask on your system follow [this link](https://flask.palletsprojects.com/en/1.1.x/installation/)
+  2. You need to clone [the YOLO V5 repository](https://github.com/ultralytics/yolov5) as well in the backend directory.
+
+ > git clone https://github.com/ultralytics/yolov5
+ 
+ > cd yolov5
+ 
+ > git reset --hard 5ba1de0cdcc414c69ceb7a4c45eb1e3895eca32a
+ 
+ > cd ..
+ 
+ 3. To run the flask server on (localhost:5000) type:
+ 
+ > flask run 
+ 
+### Flask Structure
+```
+.
+├── images
+│   └── India_000061.jpg
+├── inference
+│   └── output
+│       ├── India_000061.jpg
+│       └── India_000061.txt
+├── ngrok
+├── requirements.txt
+├── SIH
+│   ├── __init__.py
+│   └── utils.py
+├── start.txt
+└── weights.pt
+
+
+```
+
+## Admin Dashboard
 A web browser based admin dashboard which would make it easier for the authorities to keep a record of the location of the damages on roads and the status of the complaint
 
 *To run the source code and test the Webapp:-*
