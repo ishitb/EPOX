@@ -153,6 +153,8 @@ class _AllSubmissionsState extends State<AllSubmissions> {
                                                           'userDownVoted'],
                                                       id: submission['id'],
                                                       uid: user.uid,
+                                                      upvotes: 'upvotes',
+                                                      downvotes: 'downvotes',
                                                     ),
                                                     SizedBox(
                                                       height: 20.0,
