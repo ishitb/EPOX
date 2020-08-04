@@ -1,6 +1,4 @@
-# NC_SVCE_MK199_EPOX
-
-## Making Road Damage analysis smarter and easier
+# Making Road Damage analysis smarter and easier
 
 
 ### This repo consists of the code for 
