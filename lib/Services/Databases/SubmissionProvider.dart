@@ -15,6 +15,7 @@ class SubmissionProvider {
       Firestore.instance.collection('submissions');
   final CollectionReference userCollection =
       Firestore.instance.collection("users");
+  CollectionReference dummyCollection = Firestore.instance.collection('dummy');
   final List userReportedSubmissions;
 
   Future<DocumentReference> newSubmission({
@@ -44,21 +45,48 @@ class SubmissionProvider {
       username,
     );
 
+    // Getting Custom ID:
+
+    DocumentReference dummyRef = dummyCollection.document('id');
+    DocumentSnapshot dummySnap = await dummyRef.snapshots().first;
+    int customSubmitID = dummySnap.data['id'];
+
     List<Placemark> placemark =
         await Geolocator().placemarkFromCoordinates(latitude, longitude);
     newSubmissionData['location'] =
         "${placemark[0].name}, ${placemark[0].subLocality} - ${placemark[0].postalCode}, ${placemark[0].locality}, ${placemark[0].administrativeArea}";
+    newSubmissionData['upvotes'] = 0;
+    newSubmissionData['downvotes'] = 0;
+    newSubmissionData['userUpVoted'] = [];
+    newSubmissionData['userDownVoted'] = [];
 
-    DocumentReference submissionRef = await submissionCollection.add(
-      newSubmissionData,
-    );
+    await submissionCollection.document('00a9999999$customSubmitID').setData(
+          newSubmissionData,
+        );
+
+    DocumentReference submissionRef =
+        submissionCollection.document('00a9999999$customSubmitID');
+
+    await submissionCollection
+        .document('00a9999999$customSubmitID')
+        .setData(newSubmissionData);
 
     List imageData = await _uploadImage(imageFile, submissionRef.documentID);
+    // List imageData = await _uploadImage(imageFile, '00od928dcnweiw928sja');
+
+    // DocumentReference submissionRef =
+    //     submissionCollection.document('00od928dcnweiw928sja');
 
     await submissionRef.updateData({
       'imageURL': imageData[0],
       'pci': imageData[1],
     });
+
+    dummyRef.updateData(
+      {
+        'id': --customSubmitID,
+      },
+    );
 
     return submissionRef;
   }
@@ -100,11 +128,22 @@ class SubmissionProvider {
     double pci = json.decode(responseString.body)['data'][0].toDouble();
 
     return [imageURL, pci];
+    // return [imageURL, 95.60649295226];
   }
 
   List<Map> _getAllSubmissions(QuerySnapshot snapshot) {
-    return snapshot.documents.map((submission) {
+    print("hello");
+    List retrievedUserSubmissions = List();
+
+    for (var doc in snapshot.documents) {
+      if (!userReportedSubmissions.contains(doc.documentID)) {
+        retrievedUserSubmissions.add(doc);
+      }
+    }
+
+    return retrievedUserSubmissions.map((submission) {
       return {
+        'id': submission.documentID,
         'latitude': submission.data['latitude'],
         'longitude': submission.data['longitude'],
         'status': submission.data['status'].toInt(),
@@ -114,6 +153,10 @@ class SubmissionProvider {
         'location': submission.data['location'],
         'imageURL': submission.data['imageURL'],
         'pci': submission.data['pci'].toDouble(),
+        'upvotes': submission.data['upvotes'] ?? 0,
+        'downvotes': submission.data['downvotes'] ?? 0,
+        'userUpVoted': submission.data['userUpVoted'] ?? [],
+        'userDownVoted': submission.data['userDownVoted'] ?? [],
       };
     }).toList();
   }
@@ -140,6 +183,8 @@ class SubmissionProvider {
         'location': submission.data['location'],
         'imageURL': submission.data['imageURL'],
         'pci': submission.data['pci'].toDouble(),
+        'upvotes': submission.data['upvotes'] ?? 0,
+        'downvotes': submission.data['downvotes'] ?? 0,
       };
     }).toList();
   }
@@ -148,7 +193,53 @@ class SubmissionProvider {
     return submissionCollection.snapshots().map(_getUserSubmissions);
   }
 
-  // Stream<QuerySnapshot> get userSubmission {
-  //   return submissionCollection.snapshots();
-  // }
+  Stream<List<Map>> get allSubmissions {
+    return submissionCollection.snapshots().map(_getAllSubmissions);
+  }
+
+  Future<void> vote(String uid, String docID, String voting) async {
+    DocumentReference submitRef = submissionCollection.document(docID);
+    DocumentSnapshot submitSnap = await submitRef.snapshots().first;
+    bool up = voting == "up";
+
+    List downVotingUsers = submitSnap.data['userDownVoted'] ?? [];
+    List upVotingUsers = submitSnap.data['userUpVoted'] ?? [];
+    int upvotes = submitSnap.data['upvotes'] ?? 0;
+    int downVotes = submitSnap.data['downvotes'] ?? 0;
+
+    if (up) {
+      if (downVotingUsers.contains(uid)) {
+        downVotingUsers.remove(uid);
+        downVotes--;
+      }
+    } else {
+      if (upVotingUsers.contains(uid)) {
+        upVotingUsers.remove(uid);
+        upvotes--;
+      }
+    }
+
+    await submitRef.updateData(up
+        ? {
+            'userUpVoted': upVotingUsers + [uid],
+            'userDownVoted': downVotingUsers,
+            'downvotes': downVotes,
+            'upvotes': upvotes + 1
+          }
+        : {
+            'userDownVoted': downVotingUsers + [uid],
+            'userUpVoted': upVotingUsers,
+            'upvotes': upvotes,
+            'downvotes': downVotes + 1,
+          });
+
+    DocumentReference userRef = userCollection.document(submitSnap.data['uid']);
+    DocumentSnapshot userSnap = await userRef.snapshots().first;
+    print(userSnap.data);
+    await userRef.updateData(
+      up
+          ? {'credibilityScore': userSnap.data['credibilityScore'] + 1}
+          : {'credibilityScore': userSnap.data['credibilityScore'] - 1},
+    );
+  }
 }

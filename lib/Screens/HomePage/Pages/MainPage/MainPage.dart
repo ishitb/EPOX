@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'package:epox_flutter/Shared/BottomPopups.dart';
+import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
 import 'package:path_provider/path_provider.dart';
@@ -207,7 +209,7 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
                                 size: 60,
                               ),
                               onTap: () async {
-                                await Navigator.push(
+                                var response = await Navigator.push(
                                   context,
                                   MaterialPageRoute(
                                     builder: (context) => SubmitionPage(
@@ -215,6 +217,13 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
                                     ),
                                   ),
                                 );
+
+                                if (response['status']) {
+                                  final BottomPopup _bottomPopup =
+                                      BottomPopup(context: context);
+                                  _bottomPopup.showSuccessFlushBar(
+                                      "Report submitted successfully!");
+                                }
 
                                 setState(() {
                                   _image = null;

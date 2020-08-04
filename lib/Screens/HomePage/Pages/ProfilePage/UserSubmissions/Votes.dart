@@ -4,8 +4,15 @@ import 'package:epox_flutter/Shared/Colors.dart';
 
 class Votes extends StatelessWidget {
   final bool startVoting, screenLoaded;
+  final int upvotes, downvotes;
 
-  const Votes({Key key, this.startVoting, this.screenLoaded}) : super(key: key);
+  const Votes(
+      {Key key,
+      this.startVoting,
+      this.screenLoaded,
+      this.upvotes,
+      this.downvotes})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +54,7 @@ class Votes extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      "0",
+                      upvotes.toString(),
                       style: TextStyle(
                         color: OffWhite,
                         fontSize: 24.0,
@@ -83,7 +90,7 @@ class Votes extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     Text(
-                      "0",
+                      downvotes.toString(),
                       style: TextStyle(
                         color: OffWhite,
                         fontSize: 24.0,

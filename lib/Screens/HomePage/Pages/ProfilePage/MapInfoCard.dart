@@ -29,13 +29,15 @@ class MapInfoCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  location.split(',')[0],
-                  style: TextStyle(
-                    color: Orange,
-                    fontSize: 22,
+                Wrap(children: [
+                  Text(
+                    location.split(',')[0],
+                    style: TextStyle(
+                      color: Orange,
+                      fontSize: 22,
+                    ),
                   ),
-                ),
+                ]),
                 Text(
                   "Location",
                   style: TextStyle(

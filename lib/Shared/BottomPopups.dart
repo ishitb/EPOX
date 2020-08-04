@@ -16,4 +16,15 @@ class BottomPopup {
     )..show(context);
     return null;
   }
+
+  Future showSuccessFlushBar(String message) {
+    Flushbar(
+      icon: Icon(Icons.tag_faces, color: Colors.greenAccent),
+      leftBarIndicatorColor: Colors.greenAccent,
+      message: message,
+      duration: Duration(seconds: 3),
+      isDismissible: true,
+    )..show(context);
+    return null;
+  }
 }
